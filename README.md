@@ -284,7 +284,3 @@ Run tests with coverage:
 ```bash
 pytest --cov=gamelang
 ```
-
-## License
-
-MIT
