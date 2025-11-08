@@ -1,0 +1,111 @@
+// Collision Detection Example
+// This example demonstrates sprite collision detection between a player and collectible items
+
+game CollisionGame {
+    title = "Collision Detection Example"
+    width = 800
+    height = 600
+}
+
+sprite Player {
+    image = "player.png"
+    x = 100
+    y = 300
+    speed = 5
+    score = 0
+    
+    on keydown(key) {
+        if key == "LEFT" {
+            x = x - speed
+        }
+        if key == "RIGHT" {
+            x = x + speed
+        }
+        if key == "UP" {
+            y = y - speed
+        }
+        if key == "DOWN" {
+            y = y + speed
+        }
+    }
+}
+
+sprite Coin {
+    image = "coin.png"
+    x = 400
+    y = 300
+    collected = false
+    
+    update {
+        // Coins can have animation or behavior here
+    }
+}
+
+sprite Enemy {
+    image = "enemy.png"
+    x = 600
+    y = 300
+    speed = 2
+    direction = 1
+    
+    update {
+        // Simple back-and-forth movement
+        x = x + (speed * direction)
+        if x > 700 {
+            direction = -1
+        }
+        if x < 500 {
+            direction = 1
+        }
+    }
+}
+
+scene Main {
+    player = Player()
+    coin = Coin()
+    enemy = Enemy()
+    game_over = false
+    
+    update {
+        if game_over {
+            return
+        }
+        
+        // Update sprites
+        coin.update()
+        enemy.update()
+        
+        // Check collision between player and coin
+        if collides(player, coin) and not coin.collected {
+            coin.collected = true
+            player.score = player.score + 10
+            // Respawn coin at new location
+            coin.x = random(50, 750)
+            coin.y = random(50, 550)
+        }
+        
+        // Check collision between player and enemy
+        if collides(player, enemy) {
+            game_over = true
+        }
+    }
+    
+    draw {
+        screen.fill((30, 30, 30))
+        
+        if not coin.collected or true {
+            coin.draw()
+        }
+        
+        enemy.draw()
+        player.draw()
+        
+        // Draw score
+        draw_text("Score: " + str(player.score), 10, 10, (255, 255, 255))
+        
+        if game_over {
+            draw_text("GAME OVER!", 300, 250, (255, 0, 0))
+            draw_text("Final Score: " + str(player.score), 280, 300, (255, 255, 255))
+        }
+    }
+}

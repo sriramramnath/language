@@ -1,0 +1,113 @@
+// Event Handling Example
+// This example demonstrates various input event handlers including keyboard and mouse events
+
+game EventDemo {
+    title = "Event Handling Example"
+    width = 800
+    height = 600
+}
+
+sprite Box {
+    x = 400
+    y = 300
+    width = 50
+    height = 50
+    color = (100, 100, 255)
+    dragging = false
+    
+    on keydown(key) {
+        if key == "R" {
+            color = (255, 100, 100)
+        }
+        if key == "G" {
+            color = (100, 255, 100)
+        }
+        if key == "B" {
+            color = (100, 100, 255)
+        }
+        if key == "SPACE" {
+            x = 400
+            y = 300
+        }
+    }
+    
+    on keyup(key) {
+        // Key release events
+    }
+    
+    on mousedown(button, mx, my) {
+        // Check if mouse is over the box
+        if mx > x - width/2 and mx < x + width/2 {
+            if my > y - height/2 and my < y + height/2 {
+                dragging = true
+            }
+        }
+    }
+    
+    on mouseup(button, mx, my) {
+        dragging = false
+    }
+    
+    on mousemove(mx, my) {
+        if dragging {
+            x = mx
+            y = my
+        }
+    }
+}
+
+sprite Button {
+    x = 100
+    y = 500
+    width = 120
+    height = 40
+    text = "Click Me!"
+    clicked = false
+    click_count = 0
+    
+    on mousedown(button, mx, my) {
+        if mx > x and mx < x + width {
+            if my > y and my < y + height {
+                clicked = true
+                click_count = click_count + 1
+            }
+        }
+    }
+    
+    on mouseup(button, mx, my) {
+        clicked = false
+    }
+}
+
+scene Main {
+    box = Box()
+    button = Button()
+    message = "Use arrow keys, R/G/B to change color, SPACE to reset"
+    
+    update {
+        // Game logic updates here
+    }
+    
+    draw {
+        screen.fill((40, 40, 40))
+        
+        // Draw the box
+        draw_rect(box.color, box.x - box.width/2, box.y - box.height/2, box.width, box.height)
+        
+        // Draw the button
+        button_color = (200, 200, 200)
+        if button.clicked {
+            button_color = (150, 150, 150)
+        }
+        draw_rect(button_color, button.x, button.y, button.width, button.height)
+        draw_text(button.text, button.x + 10, button.y + 10, (0, 0, 0))
+        
+        // Draw instructions
+        draw_text(message, 10, 10, (255, 255, 255))
+        draw_text("Drag the box with mouse", 10, 40, (200, 200, 200))
+        draw_text("Button clicks: " + str(button.click_count), 10, 70, (200, 200, 200))
+        
+        // Draw box position
+        draw_text("Box position: (" + str(int(box.x)) + ", " + str(int(box.y)) + ")", 10, 550, (150, 150, 150))
+    }
+}
