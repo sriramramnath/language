@@ -4,7 +4,7 @@
 // With custom icon file (if you have one):
 // game "My Game" icon:assets/icon.png auto_fps
 
-// Without custom icon (uses default blue square):
+// Without custom icon (uses levelanglogo.png by default):
 game "Custom Icon Demo" auto_fps
 
 player {
@@ -14,7 +14,8 @@ player {
 
 ui {
   "Look at the window icon!" at topleft
-  "Default: Blue square with white center" at topright
+  "Default: levelanglogo.png" at topright
+  "Fallback: Blue square if logo not found" at center
 }
 
 start()

@@ -69,18 +69,22 @@ class SimpleCodeGenerator:
         self._emit("try:")
         
         if icon_path:
-            # Load icon from file
+            # Load custom icon from file
             self._emit(f'    icon = pygame.image.load("{icon_path}")')
-            self._emit("    pygame.display.set_icon(icon)")
         else:
-            # Generate default icon
-            self._emit("    icon = pygame.Surface((32, 32))")
-            self._emit("    icon.fill((0, 100, 255))  # Blue background")
-            self._emit("    pygame.draw.rect(icon, (255, 255, 255), (8, 8, 16, 16))  # White square")
-            self._emit("    pygame.display.set_icon(icon)")
+            # Load default LevLang logo
+            self._emit('    icon = pygame.image.load("levelanglogo.png")')
         
+        self._emit("    pygame.display.set_icon(icon)")
         self._emit("except:")
-        self._emit("    pass  # If icon setting fails, continue without it")
+        self._emit("    # If icon loading fails, create a simple fallback icon")
+        self._emit("    try:")
+        self._emit("        icon = pygame.Surface((32, 32))")
+        self._emit("        icon.fill((0, 100, 255))")
+        self._emit("        pygame.draw.rect(icon, (255, 255, 255), (8, 8, 16, 16))")
+        self._emit("        pygame.display.set_icon(icon)")
+        self._emit("    except:")
+        self._emit("        pass")
         self._emit()
         self._emit("clock = pygame.time.Clock()")
         self._emit()
