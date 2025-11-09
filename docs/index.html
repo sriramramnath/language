@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LevLang - Level Up Your Game Development</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        header {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #ffd700;
+        }
+
+        /* Hero Section */
+        .hero {
+            padding: 150px 0 100px;
+            text-align: center;
+            color: white;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .ascii-art {
+            font-family: monospace;
+            font-size: 1.2rem;
+            margin: 2rem 0;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 1rem;
+            border-radius: 10px;
+            display: inline-block;
+        }
+
+        .tagline {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .company {
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            color: #ffd700;
+        }
+
+        /* Download Buttons */
+        .download-section {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 3rem 0;
+        }
+
+        .download-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            min-width: 300px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .download-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .download-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.8rem;
+        }
+
+        .download-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: all 0.3s;
+            cursor: pointer;
+            border: none;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #e0e0e0;
+            color: #666;
+            cursor: not-allowed;
+        }
+
+        .coming-soon {
+            display: inline-block;
+            background: #ffd700;
+            color: #333;
+            padding: 0.3rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+
+        /* Features Section */
+        .features {
+            background: white;
+            padding: 5rem 0;
+        }
+
+        .features h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #667eea;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            padding: 2rem;
+            border-radius: 10px;
+            background: #f8f9fa;
+            transition: transform 0.3s;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-card h3 {
+            color: #667eea;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Code Example Section */
+        .code-example {
+            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+            padding: 5rem 0;
+            color: white;
+        }
+
+        .code-example h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .code-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .code-block {
+            background: rgba(0, 0, 0, 0.5);
+            padding: 2rem;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+
+        .code-block h3 {
+            margin-bottom: 1rem;
+            color: #ffd700;
+        }
+
+        pre {
+            margin: 0;
+            color: #fff;
+        }
+
+        /* Footer */
+        footer {
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            padding: 2rem 0;
+        }
+
+        footer a {
+            color: #ffd700;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .code-container {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-links {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="container">
+            <a href="#" class="logo">🎮 LevLang</a>
+            <ul class="nav-links">
+                <li><a href="#features">Features</a></li>
+                <li><a href="#examples">Examples</a></li>
+                <li><a href="#download">Download</a></li>
+                <li><a href="https://github.com/sriramramnath/language" target="_blank">GitHub</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <section class="hero">
+        <div class="container">
+            <h1>LevLang</h1>
+            <div class="ascii-art">
+╻  ┏━╸╻ ╻╻  ┏━┓┏┓╻┏━╸
+┃  ┣╸ ┃┏┛┃  ┣━┫┃┗┫┃╺┓
+┗━╸┗━╸┗┛ ┗━╸╹ ╹╹ ╹┗━┛
+            </div>
+            <p class="tagline">Level Up Your Game Development</p>
+            <p class="company">By Levelium Inc.</p>
+            <p style="font-size: 1.2rem; max-width: 800px; margin: 0 auto;">
+                A simplified game development language that transpiles to Python/pygame. 
+                Write games with minimal code while maintaining the power of pygame underneath.
+            </p>
+        </div>
+    </section>
+
+    <section id="download" class="hero" style="padding-top: 2rem;">
+        <div class="container">
+            <div class="download-section">
+                <div class="download-card">
+                    <h3>📦 LevLang Compiler</h3>
+                    <p>Download the LevLang transpiler and start creating games today!</p>
+                    <p style="font-size: 0.9rem; color: #999;">Version 0.1.0</p>
+                    <a href="https://github.com/sriramramnath/language/archive/refs/heads/main.zip" class="btn btn-primary">
+                        Download Source Code
+                    </a>
+                </div>
+
+                <div class="download-card">
+                    <h3>💻 LevCode IDE</h3>
+                    <span class="coming-soon">COMING SOON</span>
+                    <p>A dedicated IDE for LevLang development with syntax highlighting, auto-completion, and live preview.</p>
+                    <button class="btn btn-secondary" disabled>
+                        Coming Soon
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin-top: 2rem; background: rgba(255, 255, 255, 0.1); padding: 1.5rem; border-radius: 10px; max-width: 600px; margin-left: auto; margin-right: auto;">
+                <h4 style="margin-bottom: 1rem;">Quick Install</h4>
+                <pre style="background: rgba(0, 0, 0, 0.3); padding: 1rem; border-radius: 5px; text-align: left;">
+git clone https://github.com/sriramramnath/language.git
+cd language
+pip install -e .
+levlang --version</pre>
+            </div>
+        </div>
+    </section>
+
+    <section id="features" class="features">
+        <div class="container">
+            <h2>Why Choose LevLang?</h2>
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Simple Syntax</h3>
+                    <p>Write games with minimal, configuration-style code. Perfect for beginners and rapid prototyping.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast Development</h3>
+                    <p>Smart defaults and auto-generated game loops mean less boilerplate and more game creation.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🔧</div>
+                    <h3>Pygame Powered</h3>
+                    <p>Compiles to clean Python/pygame code. Full compatibility with the pygame ecosystem.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🚀</div>
+                    <h3>Watch Mode</h3>
+                    <p>Auto-transpile on save for instant feedback during development.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📚</div>
+                    <h3>Two Syntax Styles</h3>
+                    <p>Choose between simple block-based syntax or advanced declarative syntax.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Built-in Features</h3>
+                    <p>Collision detection, input handling, and game patterns included out of the box.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="examples" class="code-example">
+        <div class="container">
+            <h2>See It In Action</h2>
+            <div class="code-container">
+                <div class="code-block">
+                    <h3>LevLang Code (.lvl)</h3>
+                    <pre>// Car Racing Game
+game "Car Racing" auto_fps
+
+player {
+  movement: wasd_arrows
+  speed: 7
+}
+
+enemy {
+  spawn: random_lane
+  speed: rand(3, 6)
+  collide: gameover
+}
+
+spawn_rate: 2sec
+
+ui {
+  "Score: {score}" at topleft
+}
+
+start()</pre>
+                </div>
+
+                <div class="code-block">
+                    <h3>Transpiles to Python/Pygame</h3>
+                    <pre>import pygame
+import random
+import sys
+
+pygame.init()
+screen = pygame.display.set_mode((800, 600))
+
+class Player:
+    def __init__(self):
+        self.speed = 7
+        # ... auto-generated code
+    
+    def move(self, keys):
+        # WASD + Arrow support
+        # ... auto-generated code
+
+# Full game loop generated!
+# 200+ lines of clean pygame code</pre>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <a href="https://github.com/sriramramnath/language/tree/main/examples" class="btn btn-primary" style="background: white; color: #667eea;">
+                    View More Examples
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="features" style="background: #f8f9fa;">
+        <div class="container">
+            <h2>Get Started in Minutes</h2>
+            <div style="max-width: 800px; margin: 0 auto;">
+                <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">1. Install LevLang</h3>
+                    <pre style="background: #f0f0f0; padding: 1rem; border-radius: 5px; overflow-x: auto;">pip install -e .</pre>
+                </div>
+
+                <div style="background: white; padding: 2rem; border-radius: 10px; margin-bottom: 2rem;">
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">2. Create Your Game</h3>
+                    <pre style="background: #f0f0f0; padding: 1rem; border-radius: 5px; overflow-x: auto;">game "My Game" auto_fps
+player { movement: wasd_arrows }
+start()</pre>
+                </div>
+
+                <div style="background: white; padding: 2rem; border-radius: 10px;">
+                    <h3 style="color: #667eea; margin-bottom: 1rem;">3. Run It!</h3>
+                    <pre style="background: #f0f0f0; padding: 1rem; border-radius: 5px; overflow-x: auto;">levlang run mygame.lvl</pre>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Levelium Inc. All rights reserved.</p>
+            <p style="margin-top: 1rem;">
+                <a href="https://github.com/sriramramnath/language">GitHub</a> | 
+                <a href="https://github.com/sriramramnath/language/blob/main/README.md">Documentation</a> | 
+                <a href="https://github.com/sriramramnath/language/issues">Support</a>
+            </p>
+            <p style="margin-top: 1rem; font-size: 0.9rem; opacity: 0.7;">
+                Made with ❤️ by Levelium Inc.
+            </p>
+        </div>
+    </footer>
+</body>
+</html>
