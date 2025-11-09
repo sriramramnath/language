@@ -7,7 +7,7 @@ import subprocess
 import sys
 from pathlib import Path
 
-from gamelang.cli.cli import CLI
+from levlang.cli.cli import CLI
 
 
 class TestEndToEndTranspilation:
@@ -121,7 +121,7 @@ scene MainScene {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "complete.game")
+            input_path = os.path.join(tmpdir, "complete.lvl")
             output_path = os.path.join(tmpdir, "complete.py")
             
             # Write source file
@@ -220,7 +220,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "movement.game")
+            input_path = os.path.join(tmpdir, "movement.lvl")
             output_path = os.path.join(tmpdir, "movement.py")
             
             with open(input_path, 'w') as f:
@@ -289,7 +289,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "collision.game")
+            input_path = os.path.join(tmpdir, "collision.lvl")
             output_path = os.path.join(tmpdir, "collision.py")
             
             with open(input_path, 'w') as f:
@@ -358,7 +358,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "events.game")
+            input_path = os.path.join(tmpdir, "events.lvl")
             output_path = os.path.join(tmpdir, "events.py")
             
             with open(input_path, 'w') as f:
@@ -447,7 +447,7 @@ scene MainScene {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "multi.game")
+            input_path = os.path.join(tmpdir, "multi.lvl")
             output_path = os.path.join(tmpdir, "multi.py")
             
             with open(input_path, 'w') as f:
@@ -548,7 +548,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "expressions.game")
+            input_path = os.path.join(tmpdir, "expressions.lvl")
             output_path = os.path.join(tmpdir, "expressions.py")
             
             with open(input_path, 'w') as f:
@@ -587,7 +587,7 @@ game MinimalGame {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "minimal.game")
+            input_path = os.path.join(tmpdir, "minimal.lvl")
             output_path = os.path.join(tmpdir, "minimal.py")
             
             with open(input_path, 'w') as f:
@@ -620,7 +620,7 @@ sprite ImageSprite {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "image.game")
+            input_path = os.path.join(tmpdir, "image.lvl")
             output_path = os.path.join(tmpdir, "image.py")
             
             with open(input_path, 'w') as f:
@@ -658,7 +658,7 @@ sprite TestSprite {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "import_test.game")
+            input_path = os.path.join(tmpdir, "import_test.lvl")
             output_path = os.path.join(tmpdir, "import_test.py")
             
             with open(input_path, 'w') as f:
@@ -695,8 +695,8 @@ class TestEndToEndRealExamples:
     """Test transpiling the actual example files from the examples directory."""
     
     def test_transpile_sprite_movement_example_file(self):
-        """Test transpiling the actual sprite_movement.game example."""
-        example_path = "examples/sprite_movement.game"
+        """Test transpiling the actual sprite_movement.lvl example."""
+        example_path = "examples/sprite_movement.lvl"
         
         if not os.path.exists(example_path):
             pytest.skip("Example file not found")
@@ -717,8 +717,8 @@ class TestEndToEndRealExamples:
             compile(generated, output_path, 'exec')
     
     def test_transpile_collision_detection_example_file(self):
-        """Test transpiling the actual collision_detection.game example."""
-        example_path = "examples/collision_detection.game"
+        """Test transpiling the actual collision_detection.lvl example."""
+        example_path = "examples/collision_detection.lvl"
         
         if not os.path.exists(example_path):
             pytest.skip("Example file not found")
@@ -738,8 +738,8 @@ class TestEndToEndRealExamples:
             compile(generated, output_path, 'exec')
     
     def test_transpile_event_handling_example_file(self):
-        """Test transpiling the actual event_handling.game example."""
-        example_path = "examples/event_handling.game"
+        """Test transpiling the actual event_handling.lvl example."""
+        example_path = "examples/event_handling.lvl"
         
         if not os.path.exists(example_path):
             pytest.skip("Example file not found")
@@ -771,7 +771,7 @@ game CLITest {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "cli_test.game")
+            input_path = os.path.join(tmpdir, "cli_test.lvl")
             output_path = os.path.join(tmpdir, "cli_test.py")
             
             with open(input_path, 'w') as f:
@@ -793,7 +793,7 @@ game QuickExit {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "quick.game")
+            input_path = os.path.join(tmpdir, "quick.lvl")
             
             with open(input_path, 'w') as f:
                 f.write(source_code)
@@ -820,7 +820,7 @@ game DefaultOutput {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "default.game")
+            input_path = os.path.join(tmpdir, "default.lvl")
             expected_output = os.path.join(tmpdir, "default.py")
             
             with open(input_path, 'w') as f:

@@ -1,5 +1,5 @@
 """Lexer module for tokenizing game language source code."""
 
-from gamelang.lexer.lexer import Lexer
+from levlang.lexer.lexer import Lexer
 
 __all__ = ['Lexer']

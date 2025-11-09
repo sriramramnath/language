@@ -3,7 +3,7 @@
 from dataclasses import dataclass
 from enum import Enum
 
-from gamelang.core.source_location import SourceLocation
+from levlang.core.source_location import SourceLocation
 
 
 class ErrorType(Enum):

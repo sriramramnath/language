@@ -1,6 +1,6 @@
 """Error reporting module for the game language transpiler."""
 
-from gamelang.error.error_reporter import (
+from levlang.error.error_reporter import (
     CompilationError,
     ErrorReporter,
     ErrorType,

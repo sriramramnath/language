@@ -6,7 +6,7 @@ The Game Language is a simplified programming language designed for game develop
 
 ## File Extension
 
-Game Language source files use the `.game` extension.
+Game Language source files use the `.lvl` extension.
 
 ## Keywords
 
@@ -535,7 +535,7 @@ The transpiler provides clear error messages with source location:
 
 ```
 error: undefined sprite 'Plyer'
-  --> game.game:15:10
+  --> game.lvl:15:10
    |
 15 |     player = Plyer()
    |              ^^^^^

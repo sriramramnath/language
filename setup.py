@@ -1,9 +1,9 @@
-"""Setup script for gamelang package."""
+"""Setup script for levlang package."""
 
 from setuptools import setup, find_packages
 
 setup(
-    name="gamelang",
+    name="levlang",
     version="0.1.0",
     packages=find_packages(),
     install_requires=[
@@ -17,7 +17,7 @@ setup(
     },
     entry_points={
         "console_scripts": [
-            "gamelang=gamelang.cli.main:main",
+            "levlang=levlang.cli.main:main",
         ],
     },
     python_requires=">=3.8",

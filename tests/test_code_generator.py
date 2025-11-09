@@ -1,10 +1,10 @@
 """Unit tests for the code generator."""
 
 import pytest
-from gamelang.lexer import Lexer
-from gamelang.parser import Parser
-from gamelang.semantic import SemanticAnalyzer
-from gamelang.codegen import CodeGenerator
+from levlang.lexer import Lexer
+from levlang.parser import Parser
+from levlang.semantic import SemanticAnalyzer
+from levlang.codegen import CodeGenerator
 
 
 class TestCodeGeneratorBasics:
@@ -13,7 +13,7 @@ class TestCodeGeneratorBasics:
     def test_empty_program(self):
         """Test generating code from empty program."""
         source = ""
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -28,7 +28,7 @@ class TestCodeGeneratorBasics:
     def test_header_generation(self):
         """Test that file header is generated."""
         source = ""
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -51,7 +51,7 @@ class TestSpriteGeneration:
             speed = 5
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -78,7 +78,7 @@ class TestSpriteGeneration:
             y = 200
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -104,7 +104,7 @@ class TestSpriteGeneration:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -129,7 +129,7 @@ class TestGameInitialization:
             height = 600
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -155,7 +155,7 @@ class TestGameInitialization:
             x = 100
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -188,7 +188,7 @@ class TestGameLoop:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -217,7 +217,7 @@ class TestGameLoop:
             x = 100
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -235,7 +235,7 @@ class TestGameLoop:
             x = 100
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -260,7 +260,7 @@ class TestEventHandlerGeneration:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -286,7 +286,7 @@ class TestExpressionGeneration:
             active = true
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -308,7 +308,7 @@ class TestExpressionGeneration:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -334,7 +334,7 @@ class TestStatementGeneration:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -357,7 +357,7 @@ class TestStatementGeneration:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -397,7 +397,7 @@ class TestCodeValidity:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()

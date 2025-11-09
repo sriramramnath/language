@@ -4,7 +4,7 @@ from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 from enum import Enum
 
-from gamelang.core.source_location import SourceLocation
+from levlang.core.source_location import SourceLocation
 
 
 class SymbolKind(Enum):

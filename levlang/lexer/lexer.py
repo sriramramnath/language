@@ -2,8 +2,8 @@
 
 from typing import List, Optional
 
-from gamelang.core.token import Token, TokenType
-from gamelang.core.source_location import SourceLocation
+from levlang.core.token import Token, TokenType
+from levlang.core.source_location import SourceLocation
 
 
 class Lexer:

@@ -1,9 +1,9 @@
 """Unit tests for the parser."""
 
 import pytest
-from gamelang.lexer import Lexer
-from gamelang.parser import Parser
-from gamelang.core.ast_node import (
+from levlang.lexer import Lexer
+from levlang.parser import Parser
+from levlang.core.ast_node import (
     ProgramNode, GameNode, SpriteNode, SceneNode,
     EventHandlerNode, LiteralNode, IdentifierNode,
     BinaryOpNode, AssignmentNode, IfNode, WhileNode
@@ -15,7 +15,7 @@ class TestParserBasics:
     
     def test_empty_program(self):
         """Test parsing empty source code."""
-        lexer = Lexer("", "test.game")
+        lexer = Lexer("", "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -28,7 +28,7 @@ class TestParserBasics:
     def test_parser_error_recovery(self):
         """Test that parser can recover from errors."""
         source = "invalid game MyGame { }"
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -48,7 +48,7 @@ class TestGameDeclaration:
             title = "My Game"
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -71,7 +71,7 @@ class TestGameDeclaration:
             height = 600
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -93,7 +93,7 @@ class TestGameDeclaration:
             width = 800
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -123,7 +123,7 @@ class TestSpriteDeclaration:
             y = 200
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -149,7 +149,7 @@ class TestSpriteDeclaration:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -178,7 +178,7 @@ class TestSceneDeclaration:
             player = Player()
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -200,7 +200,7 @@ class TestSceneDeclaration:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -221,7 +221,7 @@ class TestSceneDeclaration:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -245,7 +245,7 @@ class TestSceneDeclaration:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -269,7 +269,7 @@ class TestExpressionParsing:
             bool = true
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -300,7 +300,7 @@ class TestExpressionParsing:
             x = myVariable
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -319,7 +319,7 @@ class TestExpressionParsing:
             result = a + b
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -340,7 +340,7 @@ class TestExpressionParsing:
             result = a + b * c
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -363,7 +363,7 @@ class TestExpressionParsing:
             result = (a + b) * c
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -392,7 +392,7 @@ class TestStatementParsing:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -418,7 +418,7 @@ class TestStatementParsing:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -446,7 +446,7 @@ class TestStatementParsing:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -472,7 +472,7 @@ class TestStatementParsing:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -496,7 +496,7 @@ class TestErrorReporting:
         game MyGame {
             title = "Test"
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -511,7 +511,7 @@ class TestErrorReporting:
         source = """
         invalid MyGame { }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -526,7 +526,7 @@ class TestErrorReporting:
             title =
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -578,7 +578,7 @@ class TestComplexPrograms:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         
@@ -603,7 +603,7 @@ class TestComplexPrograms:
             x = 200
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         

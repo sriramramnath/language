@@ -9,11 +9,11 @@ import tempfile
 from pathlib import Path
 from typing import Optional
 
-from gamelang.lexer.lexer import Lexer
-from gamelang.parser.parser import Parser
-from gamelang.semantic.semantic_analyzer import SemanticAnalyzer
-from gamelang.codegen.code_generator import CodeGenerator
-from gamelang.error.error_reporter import ErrorReporter, ErrorType
+from levlang.lexer.lexer import Lexer
+from levlang.parser.parser import Parser
+from levlang.semantic.semantic_analyzer import SemanticAnalyzer
+from levlang.codegen.code_generator import CodeGenerator
+from levlang.error.error_reporter import ErrorReporter, ErrorType
 
 
 class CLI:
@@ -21,14 +21,14 @@ class CLI:
     
     def __init__(self):
         """Initialize the CLI."""
-        self.cache_dir = Path.home() / '.gamelang' / 'cache'
+        self.cache_dir = Path.home() / '.levlang' / 'cache'
         self.cache_dir.mkdir(parents=True, exist_ok=True)
     
     def transpile_file(self, input_path: str, output_path: Optional[str] = None) -> int:
-        """Transpile a game language file to Python.
+        """Transpile a LevLang file to Python.
         
         Args:
-            input_path: Path to the input .game file
+            input_path: Path to the input .lvl file
             output_path: Path to the output .py file (optional)
             
         Returns:
@@ -69,10 +69,10 @@ class CLI:
             return 1
     
     def watch_mode(self, input_path: str, output_path: Optional[str] = None) -> int:
-        """Watch a game language file and automatically retranspile on changes.
+        """Watch a LevLang file and automatically retranspile on changes.
         
         Args:
-            input_path: Path to the input .game file to watch
+            input_path: Path to the input .lvl file to watch
             output_path: Path to the output .py file (optional)
             
         Returns:
@@ -141,10 +141,10 @@ class CLI:
             return 0
     
     def run_file(self, input_path: str) -> int:
-        """Transpile and execute a game language file.
+        """Transpile and execute a LevLang file.
         
         Args:
-            input_path: Path to the input .game file
+            input_path: Path to the input .lvl file
             
         Returns:
             Exit code (0 for success, non-zero for failure)
@@ -275,7 +275,7 @@ class CLI:
                     location_parts = parts[0].split(':')
                     if len(location_parts) >= 3:
                         try:
-                            from gamelang.core.source_location import SourceLocation
+                            from levlang.core.source_location import SourceLocation
                             location = SourceLocation(
                                 filename=filename,
                                 line=int(location_parts[1]),

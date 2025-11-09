@@ -1,9 +1,9 @@
 """Unit tests for the semantic analyzer."""
 
 import pytest
-from gamelang.lexer import Lexer
-from gamelang.parser import Parser
-from gamelang.semantic import SemanticAnalyzer, ErrorType
+from levlang.lexer import Lexer
+from levlang.parser import Parser
+from levlang.semantic import SemanticAnalyzer, ErrorType
 
 
 class TestSymbolResolution:
@@ -16,7 +16,7 @@ class TestSymbolResolution:
             x = undefinedVar
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -39,7 +39,7 @@ class TestSymbolResolution:
             y = x
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -60,7 +60,7 @@ class TestSymbolResolution:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -80,7 +80,7 @@ class TestSymbolResolution:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -106,7 +106,7 @@ class TestDuplicateDeclarations:
             y = 200
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -135,7 +135,7 @@ class TestDuplicateDeclarations:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -157,7 +157,7 @@ class TestDuplicateDeclarations:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -181,7 +181,7 @@ class TestTypeChecking:
             y = x * 2
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -203,7 +203,7 @@ class TestTypeChecking:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -225,7 +225,7 @@ class TestTypeChecking:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -249,7 +249,7 @@ class TestEventHandlerValidation:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -269,7 +269,7 @@ class TestEventHandlerValidation:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -289,7 +289,7 @@ class TestEventHandlerValidation:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -312,7 +312,7 @@ class TestEventHandlerValidation:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -361,7 +361,7 @@ class TestCompletePrograms:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()
@@ -389,7 +389,7 @@ class TestCompletePrograms:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         parser = Parser(tokens)
         ast = parser.parse()

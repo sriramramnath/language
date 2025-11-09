@@ -9,7 +9,7 @@ The Game Language Transpiler is a source-to-source compiler that converts simpli
 ### High-Level Architecture
 
 ```
-Source File (.game) → Lexer → Parser → AST → Code Generator → Python File (.py)
+Source File (.lvl) → Lexer → Parser → AST → Code Generator → Python File (.py)
                                 ↓
                          Semantic Analyzer
                                 ↓
@@ -195,7 +195,7 @@ class ErrorReporter:
 **Error Message Format**:
 ```
 error: undefined sprite 'Player'
-  --> game.game:15:10
+  --> game.lvl:15:10
    |
 15 |     spawn Player at (100, 100)
    |           ^^^^^^
@@ -214,10 +214,10 @@ class CLI:
 ```
 
 **Commands**:
-- `gamelang transpile <input.game> -o <output.py>`: Transpile single file
-- `gamelang watch <input.game> -o <output.py>`: Watch mode with auto-transpile
-- `gamelang run <input.game>`: Transpile and execute
-- `gamelang --version`: Show version
+- `levlang transpile <input.lvl> -o <output.py>`: Transpile single file
+- `levlang watch <input.lvl> -o <output.py>`: Watch mode with auto-transpile
+- `levlang run <input.lvl>`: Transpile and execute
+- `levlang --version`: Show version
 
 ## Data Models
 
@@ -428,7 +428,7 @@ if __name__ == "__main__":
 ## Implementation Notes
 
 ### File Extensions
-- Source files: `.game`
+- Source files: `.lvl`
 - Generated files: `.py`
 
 ### Dependencies

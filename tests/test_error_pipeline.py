@@ -4,7 +4,7 @@ import pytest
 import os
 import tempfile
 
-from gamelang.cli.cli import CLI
+from levlang.cli.cli import CLI
 
 
 class TestLexicalErrorHandling:
@@ -20,7 +20,7 @@ game Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "invalid_char.game")
+            input_path = os.path.join(tmpdir, "invalid_char.lvl")
             output_path = os.path.join(tmpdir, "invalid_char.py")
             
             with open(input_path, 'w') as f:
@@ -43,7 +43,7 @@ game Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "unterminated.game")
+            input_path = os.path.join(tmpdir, "unterminated.lvl")
             output_path = os.path.join(tmpdir, "unterminated.py")
             
             with open(input_path, 'w') as f:
@@ -65,7 +65,7 @@ game Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "unterminated_comment.game")
+            input_path = os.path.join(tmpdir, "unterminated_comment.lvl")
             output_path = os.path.join(tmpdir, "unterminated_comment.py")
             
             with open(input_path, 'w') as f:
@@ -88,7 +88,7 @@ game Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "multiple_lex.game")
+            input_path = os.path.join(tmpdir, "multiple_lex.lvl")
             output_path = os.path.join(tmpdir, "multiple_lex.py")
             
             with open(input_path, 'w') as f:
@@ -112,7 +112,7 @@ game Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "missing_brace.game")
+            input_path = os.path.join(tmpdir, "missing_brace.lvl")
             output_path = os.path.join(tmpdir, "missing_brace.py")
             
             with open(input_path, 'w') as f:
@@ -133,7 +133,7 @@ game Test
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "missing_open.game")
+            input_path = os.path.join(tmpdir, "missing_open.lvl")
             output_path = os.path.join(tmpdir, "missing_open.py")
             
             with open(input_path, 'w') as f:
@@ -154,7 +154,7 @@ invalid_keyword Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "unexpected.game")
+            input_path = os.path.join(tmpdir, "unexpected.lvl")
             output_path = os.path.join(tmpdir, "unexpected.py")
             
             with open(input_path, 'w') as f:
@@ -175,7 +175,7 @@ game {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "missing_id.game")
+            input_path = os.path.join(tmpdir, "missing_id.lvl")
             output_path = os.path.join(tmpdir, "missing_id.py")
             
             with open(input_path, 'w') as f:
@@ -196,7 +196,7 @@ game Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "missing_value.game")
+            input_path = os.path.join(tmpdir, "missing_value.lvl")
             output_path = os.path.join(tmpdir, "missing_value.py")
             
             with open(input_path, 'w') as f:
@@ -221,7 +221,7 @@ sprite Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "malformed_if.game")
+            input_path = os.path.join(tmpdir, "malformed_if.lvl")
             output_path = os.path.join(tmpdir, "malformed_if.py")
             
             with open(input_path, 'w') as f:
@@ -244,7 +244,7 @@ sprite Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "malformed_event.game")
+            input_path = os.path.join(tmpdir, "malformed_event.lvl")
             output_path = os.path.join(tmpdir, "malformed_event.py")
             
             with open(input_path, 'w') as f:
@@ -271,7 +271,7 @@ sprite Player {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "recovery.game")
+            input_path = os.path.join(tmpdir, "recovery.lvl")
             output_path = os.path.join(tmpdir, "recovery.py")
             
             with open(input_path, 'w') as f:
@@ -301,7 +301,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "undefined_sprite.game")
+            input_path = os.path.join(tmpdir, "undefined_sprite.lvl")
             output_path = os.path.join(tmpdir, "undefined_sprite.py")
             
             with open(input_path, 'w') as f:
@@ -324,7 +324,7 @@ sprite Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "undefined_var.game")
+            input_path = os.path.join(tmpdir, "undefined_var.lvl")
             output_path = os.path.join(tmpdir, "undefined_var.py")
             
             with open(input_path, 'w') as f:
@@ -349,7 +349,7 @@ sprite Player {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "duplicate_sprite.game")
+            input_path = os.path.join(tmpdir, "duplicate_sprite.lvl")
             output_path = os.path.join(tmpdir, "duplicate_sprite.py")
             
             with open(input_path, 'w') as f:
@@ -374,7 +374,7 @@ game SecondGame {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "duplicate_game.game")
+            input_path = os.path.join(tmpdir, "duplicate_game.lvl")
             output_path = os.path.join(tmpdir, "duplicate_game.py")
             
             with open(input_path, 'w') as f:
@@ -401,7 +401,7 @@ sprite Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "type_mismatch.game")
+            input_path = os.path.join(tmpdir, "type_mismatch.lvl")
             output_path = os.path.join(tmpdir, "type_mismatch.py")
             
             with open(input_path, 'w') as f:
@@ -433,7 +433,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "multiple_semantic.game")
+            input_path = os.path.join(tmpdir, "multiple_semantic.lvl")
             output_path = os.path.join(tmpdir, "multiple_semantic.py")
             
             with open(input_path, 'w') as f:
@@ -458,7 +458,7 @@ game Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "error_file.game")
+            input_path = os.path.join(tmpdir, "error_file.lvl")
             output_path = os.path.join(tmpdir, "error_file.py")
             
             with open(input_path, 'w') as f:
@@ -479,7 +479,7 @@ game Test {
             
             assert result == 1
             # Error message should mention the file
-            assert "error_file.game" in error_output or "error" in error_output.lower()
+            assert "error_file.lvl" in error_output or "error" in error_output.lower()
     
     def test_error_includes_line_number(self):
         """Test that error messages include line numbers."""
@@ -494,7 +494,7 @@ sprite Player {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "line_error.game")
+            input_path = os.path.join(tmpdir, "line_error.lvl")
             output_path = os.path.join(tmpdir, "line_error.py")
             
             with open(input_path, 'w') as f:
@@ -526,7 +526,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "descriptive.game")
+            input_path = os.path.join(tmpdir, "descriptive.lvl")
             output_path = os.path.join(tmpdir, "descriptive.py")
             
             with open(input_path, 'w') as f:
@@ -557,7 +557,7 @@ class TestErrorRecovery:
         source_code = ""
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "empty.game")
+            input_path = os.path.join(tmpdir, "empty.lvl")
             output_path = os.path.join(tmpdir, "empty.py")
             
             with open(input_path, 'w') as f:
@@ -574,7 +574,7 @@ class TestErrorRecovery:
         source_code = "   \n\n\t\t\n   "
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "whitespace.game")
+            input_path = os.path.join(tmpdir, "whitespace.lvl")
             output_path = os.path.join(tmpdir, "whitespace.py")
             
             with open(input_path, 'w') as f:
@@ -595,7 +595,7 @@ class TestErrorRecovery:
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "comments.game")
+            input_path = os.path.join(tmpdir, "comments.lvl")
             output_path = os.path.join(tmpdir, "comments.py")
             
             with open(input_path, 'w') as f:
@@ -618,7 +618,7 @@ game Test {{
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "long_line.game")
+            input_path = os.path.join(tmpdir, "long_line.lvl")
             output_path = os.path.join(tmpdir, "long_line.py")
             
             with open(input_path, 'w') as f:
@@ -652,7 +652,7 @@ sprite Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "nested.game")
+            input_path = os.path.join(tmpdir, "nested.lvl")
             output_path = os.path.join(tmpdir, "nested.py")
             
             with open(input_path, 'w') as f:
@@ -678,7 +678,7 @@ game Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "lex_blocks_parse.game")
+            input_path = os.path.join(tmpdir, "lex_blocks_parse.lvl")
             output_path = os.path.join(tmpdir, "lex_blocks_parse.py")
             
             with open(input_path, 'w') as f:
@@ -702,7 +702,7 @@ sprite Player {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "syntax_blocks_semantic.game")
+            input_path = os.path.join(tmpdir, "syntax_blocks_semantic.lvl")
             output_path = os.path.join(tmpdir, "syntax_blocks_semantic.py")
             
             with open(input_path, 'w') as f:
@@ -723,7 +723,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "semantic_blocks_codegen.game")
+            input_path = os.path.join(tmpdir, "semantic_blocks_codegen.lvl")
             output_path = os.path.join(tmpdir, "semantic_blocks_codegen.py")
             
             with open(input_path, 'w') as f:

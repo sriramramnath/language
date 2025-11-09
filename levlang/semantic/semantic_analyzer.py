@@ -2,7 +2,7 @@
 
 from typing import List, Optional, Any, Dict
 
-from gamelang.core.ast_node import (
+from levlang.core.ast_node import (
     ASTNode, ProgramNode, GameNode, SpriteNode, SceneNode,
     EventHandlerNode, MethodNode, ExpressionNode, StatementNode,
     LiteralNode, IdentifierNode, BinaryOpNode, UnaryOpNode,
@@ -10,8 +10,8 @@ from gamelang.core.ast_node import (
     WhileNode, ForNode, ReturnNode, ExpressionStatementNode,
     PythonBlockNode
 )
-from gamelang.semantic.symbol_table import SymbolTable, SymbolKind
-from gamelang.semantic.semantic_error import SemanticError, ErrorType
+from levlang.semantic.symbol_table import SymbolTable, SymbolKind
+from levlang.semantic.semantic_error import SemanticError, ErrorType
 
 
 # Type inference helpers

@@ -5,7 +5,7 @@ import os
 import tempfile
 import time
 
-from gamelang.cli.cli import CLI
+from levlang.cli.cli import CLI
 
 
 class TestTranspilationPerformance:
@@ -62,7 +62,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "small.game")
+            input_path = os.path.join(tmpdir, "small.lvl")
             output_path = os.path.join(tmpdir, "small.py")
             
             with open(input_path, 'w') as f:
@@ -163,7 +163,7 @@ sprite Sprite{i} {{
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "medium.game")
+            input_path = os.path.join(tmpdir, "medium.lvl")
             output_path = os.path.join(tmpdir, "medium.py")
             
             with open(input_path, 'w') as f:
@@ -309,7 +309,7 @@ sprite Sprite{i} {{
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "large.game")
+            input_path = os.path.join(tmpdir, "large.lvl")
             output_path = os.path.join(tmpdir, "large.py")
             
             with open(input_path, 'w') as f:
@@ -384,7 +384,7 @@ sprite Sprite{i} {{
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "very_large.game")
+            input_path = os.path.join(tmpdir, "very_large.lvl")
             output_path = os.path.join(tmpdir, "very_large.py")
             
             with open(input_path, 'w') as f:
@@ -439,7 +439,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "cache_test.game")
+            input_path = os.path.join(tmpdir, "cache_test.lvl")
             output_path1 = os.path.join(tmpdir, "cache_test1.py")
             output_path2 = os.path.join(tmpdir, "cache_test2.py")
             
@@ -490,7 +490,7 @@ game Test {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "invalidate.game")
+            input_path = os.path.join(tmpdir, "invalidate.lvl")
             output_path = os.path.join(tmpdir, "invalidate.py")
             
             cli = CLI()
@@ -530,7 +530,7 @@ game IncrementalTest {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "incremental.game")
+            input_path = os.path.join(tmpdir, "incremental.lvl")
             output_path = os.path.join(tmpdir, "incremental.py")
             
             with open(input_path, 'w') as f:
@@ -573,7 +573,7 @@ game WatchTest {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "watch.game")
+            input_path = os.path.join(tmpdir, "watch.lvl")
             
             with open(input_path, 'w') as f:
                 f.write(source_code)
@@ -617,7 +617,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "consistency.game")
+            input_path = os.path.join(tmpdir, "consistency.lvl")
             
             with open(input_path, 'w') as f:
                 f.write(source_code)
@@ -662,7 +662,7 @@ sprite Sprite{i} {{
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "memory.game")
+            input_path = os.path.join(tmpdir, "memory.lvl")
             output_path = os.path.join(tmpdir, "memory.py")
             
             with open(input_path, 'w') as f:

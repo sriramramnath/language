@@ -4,14 +4,14 @@ import sys
 import argparse
 from pathlib import Path
 
-from gamelang.cli.cli import CLI
+from levlang.cli.cli import CLI
 
 
 def main():
-    """Main entry point for the gamelang CLI."""
+    """Main entry point for the levlang CLI."""
     parser = argparse.ArgumentParser(
-        prog='gamelang',
-        description='Game Language Transpiler - Transpile game language to Python/pygame',
+        prog='levlang',
+        description='LevLang Transpiler - Transpile LevLang to Python/pygame',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     
@@ -19,7 +19,7 @@ def main():
     parser.add_argument(
         '--version',
         action='version',
-        version='GameLang Transpiler v0.1.0'
+        version='LevLang Transpiler v0.1.0'
     )
     
     # Create subparsers for commands
@@ -28,12 +28,12 @@ def main():
     # Transpile command
     transpile_parser = subparsers.add_parser(
         'transpile',
-        help='Transpile a game language file to Python'
+        help='Transpile a LevLang file to Python'
     )
     transpile_parser.add_argument(
         'input',
         type=str,
-        help='Input game language file (.game)'
+        help='Input LevLang file (.lvl)'
     )
     transpile_parser.add_argument(
         '-o', '--output',
@@ -44,12 +44,12 @@ def main():
     # Watch command
     watch_parser = subparsers.add_parser(
         'watch',
-        help='Watch a game language file and automatically retranspile on changes'
+        help='Watch a LevLang file and automatically retranspile on changes'
     )
     watch_parser.add_argument(
         'input',
         type=str,
-        help='Input game language file (.game) to watch'
+        help='Input LevLang file (.lvl) to watch'
     )
     watch_parser.add_argument(
         '-o', '--output',
@@ -60,12 +60,12 @@ def main():
     # Run command
     run_parser = subparsers.add_parser(
         'run',
-        help='Transpile and execute a game language file'
+        help='Transpile and execute a LevLang file'
     )
     run_parser.add_argument(
         'input',
         type=str,
-        help='Input game language file (.game) to run'
+        help='Input LevLang file (.lvl) to run'
     )
     
     # Parse arguments

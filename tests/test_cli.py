@@ -6,7 +6,7 @@ import tempfile
 import time
 from pathlib import Path
 
-from gamelang.cli.cli import CLI
+from levlang.cli.cli import CLI
 
 
 class TestCLITranspile:
@@ -30,7 +30,7 @@ sprite Player {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "test.game")
+            input_path = os.path.join(tmpdir, "test.lvl")
             output_path = os.path.join(tmpdir, "test.py")
             
             # Write source file
@@ -62,7 +62,7 @@ game TestGame {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "game.game")
+            input_path = os.path.join(tmpdir, "game.lvl")
             expected_output = os.path.join(tmpdir, "game.py")
             
             # Write source file
@@ -80,7 +80,7 @@ game TestGame {
     def test_transpile_nonexistent_file(self):
         """Test transpiling a file that doesn't exist."""
         cli = CLI()
-        result = cli.transpile_file("nonexistent.game", "output.py")
+        result = cli.transpile_file("nonexistent.lvl", "output.py")
         
         # Should return error code
         assert result == 1
@@ -94,7 +94,7 @@ game MyGame {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "error.game")
+            input_path = os.path.join(tmpdir, "error.lvl")
             output_path = os.path.join(tmpdir, "error.py")
             
             # Write source file
@@ -123,7 +123,7 @@ scene Main {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "error.game")
+            input_path = os.path.join(tmpdir, "error.lvl")
             output_path = os.path.join(tmpdir, "error.py")
             
             # Write source file
@@ -151,7 +151,7 @@ game MyGame {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "test.game")
+            input_path = os.path.join(tmpdir, "test.lvl")
             
             # Write source file
             with open(input_path, 'w') as f:
@@ -170,7 +170,7 @@ game MyGame {
     def test_run_nonexistent_file(self):
         """Test running a file that doesn't exist."""
         cli = CLI()
-        result = cli.run_file("nonexistent.game")
+        result = cli.run_file("nonexistent.lvl")
         
         # Should return error code
         assert result == 1
@@ -184,7 +184,7 @@ game MyGame {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "error.game")
+            input_path = os.path.join(tmpdir, "error.lvl")
             
             # Write source file
             with open(input_path, 'w') as f:
@@ -209,9 +209,9 @@ class TestCLICaching:
         source2 = "game Test {}"
         source3 = "game Different {}"
         
-        key1 = cli.get_cache_key(source1, "test.game")
-        key2 = cli.get_cache_key(source2, "test.game")
-        key3 = cli.get_cache_key(source3, "test.game")
+        key1 = cli.get_cache_key(source1, "test.lvl")
+        key2 = cli.get_cache_key(source2, "test.lvl")
+        key3 = cli.get_cache_key(source3, "test.lvl")
         
         # Same source should produce same key
         assert key1 == key2
@@ -250,7 +250,7 @@ game CachedGame {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "cached.game")
+            input_path = os.path.join(tmpdir, "cached.lvl")
             output_path1 = os.path.join(tmpdir, "output1.py")
             output_path2 = os.path.join(tmpdir, "output2.py")
             
@@ -306,7 +306,7 @@ class TestCLIWatchMode:
         # For now, we'll test that it handles the error gracefully
         # by checking the initial file existence
         
-        result = cli.watch_mode("nonexistent.game", "output.py")
+        result = cli.watch_mode("nonexistent.lvl", "output.py")
         assert result == 1
 
 
@@ -351,7 +351,7 @@ scene MainScene {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "complete.game")
+            input_path = os.path.join(tmpdir, "complete.lvl")
             output_path = os.path.join(tmpdir, "complete.py")
             
             # Write source file
@@ -409,7 +409,7 @@ sprite Bullet {
 """
         
         with tempfile.TemporaryDirectory() as tmpdir:
-            input_path = os.path.join(tmpdir, "multi.game")
+            input_path = os.path.join(tmpdir, "multi.lvl")
             output_path = os.path.join(tmpdir, "multi.py")
             
             # Write source file

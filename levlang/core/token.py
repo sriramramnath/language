@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from enum import Enum, auto
 from typing import Any
 
-from gamelang.core.source_location import SourceLocation
+from levlang.core.source_location import SourceLocation
 
 
 class TokenType(Enum):

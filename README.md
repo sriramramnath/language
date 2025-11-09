@@ -36,7 +36,7 @@ pip install -e ".[dev]"
 
 ### Your First Game
 
-Create a file called `hello.game`:
+Create a file called `hello.lvl`:
 
 ```
 game HelloGame {
@@ -85,31 +85,31 @@ scene Main {
 Transpile and run in one command:
 
 ```bash
-gamelang run hello.game
+levlang run hello.lvl
 ```
 
 Or transpile to Python first:
 
 ```bash
-gamelang transpile hello.game -o hello.py
+levlang transpile hello.lvl -o hello.py
 python hello.py
 ```
 
 ## CLI Usage
 
-The `gamelang` command provides several modes of operation:
+The `levlang` command provides several modes of operation:
 
 ### Transpile Command
 
-Convert a `.game` file to Python:
+Convert a `.lvl` file to Python:
 
 ```bash
-gamelang transpile <input.game> -o <output.py>
+levlang transpile <input.lvl> -o <output.py>
 ```
 
 Example:
 ```bash
-gamelang transpile game.game -o game.py
+levlang transpile game.lvl -o game.py
 ```
 
 ### Watch Mode
@@ -117,12 +117,12 @@ gamelang transpile game.game -o game.py
 Automatically retranspile when the source file changes:
 
 ```bash
-gamelang watch <input.game> -o <output.py>
+levlang watch <input.lvl> -o <output.py>
 ```
 
 Example:
 ```bash
-gamelang watch game.game -o game.py
+levlang watch game.lvl -o game.py
 ```
 
 This is useful during development - keep this running in one terminal while you edit your game file, and it will automatically regenerate the Python code.
@@ -132,12 +132,12 @@ This is useful during development - keep this running in one terminal while you 
 Transpile and execute in one step:
 
 ```bash
-gamelang run <input.game>
+levlang run <input.lvl>
 ```
 
 Example:
 ```bash
-gamelang run game.game
+levlang run game.lvl
 ```
 
 ### Version
@@ -145,22 +145,22 @@ gamelang run game.game
 Check the transpiler version:
 
 ```bash
-gamelang --version
+levlang --version
 ```
 
 ## Examples
 
 The `examples/` directory contains sample games demonstrating various features:
 
-### Sprite Movement (`examples/sprite_movement.game`)
+### Sprite Movement (`examples/sprite_movement.lvl`)
 
 Basic sprite creation and keyboard-based movement with boundary checking.
 
 ```bash
-gamelang run examples/sprite_movement.game
+levlang run examples/sprite_movement.lvl
 ```
 
-### Event Handling (`examples/event_handling.game`)
+### Event Handling (`examples/event_handling.lvl`)
 
 Demonstrates keyboard and mouse event handlers including:
 - Key press/release events
@@ -168,15 +168,15 @@ Demonstrates keyboard and mouse event handlers including:
 - Color changes based on input
 
 ```bash
-gamelang run examples/event_handling.game
+levlang run examples/event_handling.lvl
 ```
 
-### Collision Detection (`examples/collision_detection.game`)
+### Collision Detection (`examples/collision_detection.lvl`)
 
 Shows sprite collision detection between player, collectibles, and enemies.
 
 ```bash
-gamelang run examples/collision_detection.game
+levlang run examples/collision_detection.lvl
 ```
 
 ## Language Features
@@ -264,7 +264,7 @@ For complete language syntax and features, see:
 ## Project Structure
 
 ```
-gamelang/
+levlang/
 ├── core/           # Core data structures (AST, tokens, source location)
 ├── lexer/          # Tokenizer
 ├── parser/         # Parser and AST builder
@@ -282,5 +282,5 @@ pytest
 
 Run tests with coverage:
 ```bash
-pytest --cov=gamelang
+pytest --cov=levlang
 ```

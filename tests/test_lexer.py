@@ -1,8 +1,8 @@
 """Unit tests for the lexer."""
 
 import pytest
-from gamelang.lexer import Lexer
-from gamelang.core.token import TokenType
+from levlang.lexer import Lexer
+from levlang.core.token import TokenType
 
 
 class TestLexerBasics:
@@ -10,7 +10,7 @@ class TestLexerBasics:
     
     def test_empty_source(self):
         """Test lexing empty source code."""
-        lexer = Lexer("", "test.game")
+        lexer = Lexer("", "test.lvl")
         tokens = lexer.tokenize()
         
         assert len(tokens) == 1
@@ -19,7 +19,7 @@ class TestLexerBasics:
     
     def test_whitespace_only(self):
         """Test lexing whitespace-only source."""
-        lexer = Lexer("   \t\n  \r\n  ", "test.game")
+        lexer = Lexer("   \t\n  \r\n  ", "test.lvl")
         tokens = lexer.tokenize()
         
         assert len(tokens) == 1
@@ -32,7 +32,7 @@ class TestKeywords:
     
     def test_game_keyword(self):
         """Test 'game' keyword."""
-        lexer = Lexer("game", "test.game")
+        lexer = Lexer("game", "test.lvl")
         tokens = lexer.tokenize()
         
         assert len(tokens) == 2
@@ -41,7 +41,7 @@ class TestKeywords:
     
     def test_sprite_keyword(self):
         """Test 'sprite' keyword."""
-        lexer = Lexer("sprite", "test.game")
+        lexer = Lexer("sprite", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.SPRITE
@@ -49,14 +49,14 @@ class TestKeywords:
     
     def test_scene_keyword(self):
         """Test 'scene' keyword."""
-        lexer = Lexer("scene", "test.game")
+        lexer = Lexer("scene", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.SCENE
     
     def test_control_flow_keywords(self):
         """Test control flow keywords."""
-        lexer = Lexer("if else while for return", "test.game")
+        lexer = Lexer("if else while for return", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.IF
@@ -67,7 +67,7 @@ class TestKeywords:
     
     def test_event_keywords(self):
         """Test event-related keywords."""
-        lexer = Lexer("on when update draw input", "test.game")
+        lexer = Lexer("on when update draw input", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.ON
@@ -82,7 +82,7 @@ class TestIdentifiers:
     
     def test_simple_identifier(self):
         """Test simple identifier."""
-        lexer = Lexer("myVariable", "test.game")
+        lexer = Lexer("myVariable", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.IDENTIFIER
@@ -90,7 +90,7 @@ class TestIdentifiers:
     
     def test_identifier_with_underscore(self):
         """Test identifier with underscores."""
-        lexer = Lexer("my_variable_name", "test.game")
+        lexer = Lexer("my_variable_name", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.IDENTIFIER
@@ -98,7 +98,7 @@ class TestIdentifiers:
     
     def test_identifier_with_numbers(self):
         """Test identifier with numbers."""
-        lexer = Lexer("player1 sprite2d", "test.game")
+        lexer = Lexer("player1 sprite2d", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.IDENTIFIER
@@ -108,7 +108,7 @@ class TestIdentifiers:
     
     def test_identifier_starting_with_underscore(self):
         """Test identifier starting with underscore."""
-        lexer = Lexer("_private", "test.game")
+        lexer = Lexer("_private", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.IDENTIFIER
@@ -120,7 +120,7 @@ class TestLiterals:
     
     def test_integer_literal(self):
         """Test integer literals."""
-        lexer = Lexer("42 0 999", "test.game")
+        lexer = Lexer("42 0 999", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.NUMBER
@@ -132,7 +132,7 @@ class TestLiterals:
     
     def test_float_literal(self):
         """Test float literals."""
-        lexer = Lexer("3.14 0.5 100.0", "test.game")
+        lexer = Lexer("3.14 0.5 100.0", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.NUMBER
@@ -144,7 +144,7 @@ class TestLiterals:
     
     def test_string_literal_double_quotes(self):
         """Test string literals with double quotes."""
-        lexer = Lexer('"hello world"', "test.game")
+        lexer = Lexer('"hello world"', "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.STRING
@@ -152,7 +152,7 @@ class TestLiterals:
     
     def test_string_literal_single_quotes(self):
         """Test string literals with single quotes."""
-        lexer = Lexer("'hello world'", "test.game")
+        lexer = Lexer("'hello world'", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.STRING
@@ -160,7 +160,7 @@ class TestLiterals:
     
     def test_string_with_escape_sequences(self):
         """Test string with escape sequences."""
-        lexer = Lexer(r'"hello\nworld\ttab"', "test.game")
+        lexer = Lexer(r'"hello\nworld\ttab"', "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.STRING
@@ -168,7 +168,7 @@ class TestLiterals:
     
     def test_boolean_literals(self):
         """Test boolean literals."""
-        lexer = Lexer("true false", "test.game")
+        lexer = Lexer("true false", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.TRUE
@@ -182,7 +182,7 @@ class TestOperators:
     
     def test_arithmetic_operators(self):
         """Test arithmetic operators."""
-        lexer = Lexer("+ - * / %", "test.game")
+        lexer = Lexer("+ - * / %", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.PLUS
@@ -193,7 +193,7 @@ class TestOperators:
     
     def test_comparison_operators(self):
         """Test comparison operators."""
-        lexer = Lexer("== != < <= > >=", "test.game")
+        lexer = Lexer("== != < <= > >=", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.EQUAL_EQUAL
@@ -205,7 +205,7 @@ class TestOperators:
     
     def test_logical_operators(self):
         """Test logical operators."""
-        lexer = Lexer("&& || !", "test.game")
+        lexer = Lexer("&& || !", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.AND
@@ -214,7 +214,7 @@ class TestOperators:
     
     def test_assignment_operator(self):
         """Test assignment operator."""
-        lexer = Lexer("=", "test.game")
+        lexer = Lexer("=", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.EQUAL
@@ -225,7 +225,7 @@ class TestDelimiters:
     
     def test_braces(self):
         """Test braces."""
-        lexer = Lexer("{ }", "test.game")
+        lexer = Lexer("{ }", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.LEFT_BRACE
@@ -233,7 +233,7 @@ class TestDelimiters:
     
     def test_parentheses(self):
         """Test parentheses."""
-        lexer = Lexer("( )", "test.game")
+        lexer = Lexer("( )", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.LEFT_PAREN
@@ -241,7 +241,7 @@ class TestDelimiters:
     
     def test_brackets(self):
         """Test brackets."""
-        lexer = Lexer("[ ]", "test.game")
+        lexer = Lexer("[ ]", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.LEFT_BRACKET
@@ -249,7 +249,7 @@ class TestDelimiters:
     
     def test_punctuation(self):
         """Test punctuation delimiters."""
-        lexer = Lexer(", . : ;", "test.game")
+        lexer = Lexer(", . : ;", "test.lvl")
         tokens = lexer.tokenize()
         
         assert tokens[0].type == TokenType.COMMA
@@ -263,7 +263,7 @@ class TestComments:
     
     def test_single_line_comment(self):
         """Test single-line comments."""
-        lexer = Lexer("game // this is a comment\nsprite", "test.game")
+        lexer = Lexer("game // this is a comment\nsprite", "test.lvl")
         tokens = lexer.tokenize()
         
         assert len(tokens) == 3  # game, sprite, EOF
@@ -272,7 +272,7 @@ class TestComments:
     
     def test_block_comment(self):
         """Test block comments."""
-        lexer = Lexer("game /* this is a\nmulti-line comment */ sprite", "test.game")
+        lexer = Lexer("game /* this is a\nmulti-line comment */ sprite", "test.lvl")
         tokens = lexer.tokenize()
         
         assert len(tokens) == 3  # game, sprite, EOF
@@ -285,7 +285,7 @@ class TestErrorReporting:
     
     def test_invalid_character(self):
         """Test invalid character detection."""
-        lexer = Lexer("game @ sprite", "test.game")
+        lexer = Lexer("game @ sprite", "test.lvl")
         tokens = lexer.tokenize()
         
         assert lexer.has_errors()
@@ -294,7 +294,7 @@ class TestErrorReporting:
     
     def test_unterminated_string(self):
         """Test unterminated string detection."""
-        lexer = Lexer('"hello world', "test.game")
+        lexer = Lexer('"hello world', "test.lvl")
         tokens = lexer.tokenize()
         
         assert lexer.has_errors()
@@ -302,7 +302,7 @@ class TestErrorReporting:
     
     def test_unterminated_block_comment(self):
         """Test unterminated block comment detection."""
-        lexer = Lexer("/* this comment never ends", "test.game")
+        lexer = Lexer("/* this comment never ends", "test.lvl")
         tokens = lexer.tokenize()
         
         assert lexer.has_errors()
@@ -310,12 +310,12 @@ class TestErrorReporting:
     
     def test_error_location_tracking(self):
         """Test that errors include correct location information."""
-        lexer = Lexer("game\n@", "test.game")
+        lexer = Lexer("game\n@", "test.lvl")
         tokens = lexer.tokenize()
         
         assert lexer.has_errors()
         error = lexer.get_errors()[0]
-        assert "test.game:2:1" in error
+        assert "test.lvl:2:1" in error
 
 
 class TestComplexScenarios:
@@ -329,7 +329,7 @@ class TestComplexScenarios:
             width = 800
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         
         assert not lexer.has_errors()
@@ -348,7 +348,7 @@ class TestComplexScenarios:
             }
         }
         """
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         
         assert not lexer.has_errors()
@@ -361,7 +361,7 @@ class TestComplexScenarios:
     def test_expression_with_operators(self):
         """Test tokenizing complex expression."""
         source = "x = (a + b) * c - d / 2"
-        lexer = Lexer(source, "test.game")
+        lexer = Lexer(source, "test.lvl")
         tokens = lexer.tokenize()
         
         assert not lexer.has_errors()

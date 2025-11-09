@@ -3,7 +3,7 @@ requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "gamelang"
+name = "levlang"
 version = "0.1.0"
 description = "A simplified game development language that transpiles to Python/pygame"
 readme = "README.md"
@@ -19,11 +19,11 @@ dev = [
 ]
 
 [project.scripts]
-gamelang = "gamelang.cli.main:main"
+levlang = "levlang.cli.main:main"
 
 [tool.setuptools.packages.find]
 where = ["."]
-include = ["gamelang*"]
+include = ["levlang*"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

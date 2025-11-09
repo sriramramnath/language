@@ -2,8 +2,8 @@
 
 from typing import List, Optional
 
-from gamelang.core.token import Token, TokenType
-from gamelang.core.ast_node import (
+from levlang.core.token import Token, TokenType
+from levlang.core.ast_node import (
     ASTNode, ProgramNode, GameNode, SpriteNode, SceneNode,
     EventHandlerNode, MethodNode, ExpressionNode, StatementNode,
     LiteralNode, IdentifierNode, BinaryOpNode, UnaryOpNode,
@@ -11,7 +11,7 @@ from gamelang.core.ast_node import (
     WhileNode, ForNode, ReturnNode, ExpressionStatementNode,
     PythonBlockNode
 )
-from gamelang.core.source_location import SourceLocation
+from levlang.core.source_location import SourceLocation
 
 
 class ParseError(Exception):
