@@ -1,0 +1,34 @@
+// Space Shooter Example
+// Classic space shooter with enemies coming from above
+
+game "Space Shooter" resizable auto_fps
+
+player {
+  movement: arrows
+  speed: 8
+  weapon: laser
+}
+
+enemy {
+  spawn: random_top
+  speed: rand(2, 5)
+  move: down
+  offscreen: destroy
+  collide: gameover
+  hit: destroy, score+5
+}
+
+spawn_rate: 1sec
+
+ui {
+  "Score: {score}" at topleft
+  "Press SPACE to shoot" at topright
+}
+
+gameover {
+  "GAME OVER!"
+  "Final Score: {score}"
+  "SPACE to restart"
+}
+
+start()

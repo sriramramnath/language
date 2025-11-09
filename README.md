@@ -1,44 +1,69 @@
-# Game Language Transpiler
+# LevLang - Level Up Your Game Development
+
+```
+╻  ┏━╸╻ ╻╻  ┏━┓┏┓╻┏━╸
+┃  ┣╸ ┃┏┛┃  ┣━┫┃┗┫┃╺┓
+┗━╸┗━╸┗┛ ┗━╸╹ ╹╹ ╹┗━┛ 
+```
 
 A simplified game development language that transpiles to Python/pygame.
+Created by **Levelium Inc.**
 
 ## Overview
 
-LevLang provides an accessible syntax for game development that compiles to Python code using the pygame library. It reduces boilerplate while maintaining full pygame capabilities.
+LevLang is a game development language that transpiles to Python/pygame, designed to make game creation accessible and fun. Write games with minimal code while maintaining the power of pygame underneath.
 
-LevLang supports two syntax styles:
+### Why LevLang?
 
-**Simple Block-Based Syntax** (Recommended for beginners):
-- Minimal, configuration-style syntax
-- Smart defaults for common game patterns
-- Perfect for simple arcade games
+**🎮 Two Syntax Styles for Every Skill Level:**
+- **Simple Syntax**: Configuration-style blocks perfect for beginners and rapid prototyping
+- **Advanced Syntax**: Full control with declarative sprites, scenes, and event handlers
 
-**Advanced Declarative Syntax**:
-- Full control over sprites and scenes
-- Custom event handlers
-- Direct pygame access when needed
+**⚡ Fast Development:**
+- Smart defaults reduce boilerplate
+- Auto-generated game loops
+- Built-in collision detection and input handling
+
+**🔧 Powered by Pygame:**
+- Compiles to clean, readable Python code
+- Full pygame compatibility
+- Easy to extend and customize
+
+**🚀 Developer-Friendly:**
+- Watch mode for instant feedback
+- Clear error messages
+- Comprehensive examples
 
 ## Quick Start
 
 ### Installation
 
-1. Install Python 3.8 or higher
-2. Install the Game Language transpiler:
+**Prerequisites:**
+- Python 3.8 or higher
+- pip (Python package manager)
+
+**Install LevLang:**
 
 ```bash
+# Clone the repository
+git clone https://github.com/sriramramnath/language.git
+cd language
+
+# Install in development mode
 pip install -e .
 ```
 
-3. Install pygame (if not already installed):
+This will install:
+- The `levlang` command-line tool
+- pygame (automatically installed as a dependency)
+
+**Verify installation:**
 
 ```bash
-pip install pygame
+levlang --version
 ```
 
-For development:
-```bash
-pip install -e ".[dev]"
-```
+You should see the LevLang banner with version information.
 
 ### Your First Game (Simple Syntax)
 
@@ -133,15 +158,34 @@ scene Main {
 Transpile and run in one command:
 
 ```bash
-levlang run hello.lvl
+levlang run racing.lvl
 ```
 
 Or transpile to Python first:
 
 ```bash
-levlang transpile hello.lvl -o hello.py
-python hello.py
+levlang transpile racing.lvl -o racing.py
+python racing.py
 ```
+
+### Simple vs Advanced Syntax
+
+**Simple Syntax** - Perfect for arcade games:
+```levlang
+game "My Game" auto_fps
+player { movement: wasd_arrows, speed: 5 }
+enemy { spawn: random, speed: 3, collide: gameover }
+start()
+```
+
+**Advanced Syntax** - Full control:
+```levlang
+game MyGame { title = "My Game", width = 800 }
+sprite Player { x = 400, on keydown(key) { ... } }
+scene Main { update { ... }, draw { ... } }
+```
+
+Choose the style that fits your needs - or mix both!
 
 ## CLI Usage
 
@@ -200,40 +244,115 @@ levlang --version
 
 The `examples/` directory contains sample games demonstrating various features:
 
+### Car Racing (`examples/car_racing.lvl`)
+
+A complete car racing game with lane-based movement and obstacle avoidance.
+
+**Features:**
+- 3-lane road system
+- Random enemy spawning
+- Score tracking
+- Game over and restart
+
+```bash
+levlang run examples/car_racing.lvl
+```
+
 ### Sprite Movement (`examples/sprite_movement.lvl`)
 
-Basic sprite creation and keyboard-based movement with boundary checking.
+Basic player movement with WASD and arrow keys.
+
+**Features:**
+- Dual input support (WASD + Arrows)
+- Position tracking
+- Boundary checking
 
 ```bash
 levlang run examples/sprite_movement.lvl
 ```
 
-### Event Handling (`examples/event_handling.lvl`)
+### Space Shooter (`examples/space_shooter.lvl`)
 
-Demonstrates keyboard and mouse event handlers including:
-- Key press/release events
-- Mouse click and drag
-- Color changes based on input
+Classic space shooter with enemies and shooting mechanics.
 
-```bash
-levlang run examples/event_handling.lvl
-```
-
-### Collision Detection (`examples/collision_detection.lvl`)
-
-Shows sprite collision detection between player, collectibles, and enemies.
+**Features:**
+- Top-down shooting
+- Enemy spawning
+- Collision detection
+- Score system
 
 ```bash
-levlang run examples/collision_detection.lvl
+levlang run examples/space_shooter.lvl
 ```
+
+### Advanced Examples
+
+For more complex examples using the advanced syntax, see:
+- `examples/event_handling.lvl` - Mouse and keyboard event handling
+- `examples/collision_detection.lvl` - Detailed collision system
 
 ## Language Features
 
-### Game Declaration
+### Simple Syntax Features
 
-Define your game window properties:
-
+**Game Configuration:**
+```levlang
+game "My Game" resizable auto_fps
 ```
+
+**Player Setup:**
+```levlang
+player {
+  movement: wasd_arrows    // Supports WASD and arrow keys
+  speed: 5
+}
+```
+
+**Enemy/Obstacle Setup:**
+```levlang
+enemy {
+  spawn: random_lane
+  speed: rand(3, 6)
+  move: down
+  offscreen: destroy, score+10
+  collide: gameover
+}
+```
+
+**Road/Background:**
+```levlang
+road {
+  lanes: 3
+  scrolling: true
+}
+```
+
+**UI Elements:**
+```levlang
+ui {
+  "Score: {score}" at topleft
+  "Lives: {lives}" at topright
+}
+```
+
+**Game Over Screen:**
+```levlang
+gameover {
+  "GAME OVER!"
+  "Final Score: {score}"
+  "Press SPACE to restart"
+}
+```
+
+**Spawn Rate:**
+```levlang
+spawn_rate: 2sec  // Spawn enemies every 2 seconds
+```
+
+### Advanced Syntax Features
+
+**Game Declaration:**
+```levlang
 game MyGame {
     title = "Game Title"
     width = 800
@@ -241,11 +360,8 @@ game MyGame {
 }
 ```
 
-### Sprites
-
-Create game objects with properties and event handlers:
-
-```
+**Sprites:**
+```levlang
 sprite Enemy {
     x = 100
     y = 100
@@ -258,11 +374,8 @@ sprite Enemy {
 }
 ```
 
-### Scenes
-
-Define game scenes with update and draw logic:
-
-```
+**Scenes:**
+```levlang
 scene Main {
     player = Player()
     
@@ -278,26 +391,14 @@ scene Main {
 }
 ```
 
-### Event Handlers
-
-Respond to user input:
-
-```
+**Event Handlers:**
+```levlang
 on keydown(key) { }          // Key pressed
 on keyup(key) { }            // Key released
 on mousedown(button, mx, my) { }  // Mouse button pressed
 on mouseup(button, mx, my) { }    // Mouse button released
 on mousemove(mx, my) { }     // Mouse moved
 ```
-
-### Built-in Functions
-
-- `screen.fill(color)` - Fill screen with color
-- `draw_rect(color, x, y, width, height)` - Draw rectangle
-- `draw_circle(color, x, y, radius)` - Draw circle
-- `draw_text(text, x, y, color)` - Draw text
-- `collides(sprite1, sprite2)` - Check collision
-- `random(min, max)` - Random number
 
 ## Documentation
 
@@ -314,21 +415,76 @@ For complete language syntax and features, see:
 ```
 levlang/
 ├── core/           # Core data structures (AST, tokens, source location)
-├── lexer/          # Tokenizer
-├── parser/         # Parser and AST builder
+├── lexer/          # Tokenizer for advanced syntax
+├── parser/         # Parsers (simple and advanced)
+│   ├── parser.py         # Advanced declarative syntax parser
+│   └── simple_parser.py  # Simple block-based syntax parser
 ├── semantic/       # Semantic analyzer
-├── codegen/        # Code generator
+├── codegen/        # Code generators
+│   ├── code_generator.py        # Advanced syntax generator
+│   └── simple_generator.py      # Simple syntax generator
 └── cli/            # Command-line interface
 ```
 
 ## Development
 
-Run tests:
+### Running Tests
+
 ```bash
+# Run all tests
+pytest
+
+# Run with coverage
+pytest --cov=levlang
+
+# Run specific test file
+pytest tests/test_parser.py
+```
+
+### Contributing
+
+We welcome contributions! Here's how you can help:
+
+1. **Report Bugs**: Open an issue with details about the problem
+2. **Suggest Features**: Share your ideas for new language features
+3. **Submit Pull Requests**: Fix bugs or add features
+4. **Improve Documentation**: Help make LevLang easier to learn
+5. **Share Examples**: Create cool games and share them!
+
+### Development Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/sriramramnath/language.git
+cd language
+
+# Install in development mode with dev dependencies
+pip install -e ".[dev]"
+
+# Run tests
 pytest
 ```
 
-Run tests with coverage:
-```bash
-pytest --cov=levlang
-```
+## License
+
+This project is open source. See LICENSE file for details.
+
+## Credits
+
+**Created by Levelium Inc.**
+
+LevLang is built on top of:
+- [Pygame](https://www.pygame.org/) - Python game development library
+- Python 3.8+ - Programming language
+
+## Support
+
+- **Issues**: [GitHub Issues](https://github.com/sriramramnath/language/issues)
+- **Discussions**: Share your games and get help
+- **Documentation**: [Full Syntax Guide](docs/SYNTAX.md)
+
+---
+
+**Happy Game Development! 🎮**
+
+Made with ❤️ by Levelium Inc.

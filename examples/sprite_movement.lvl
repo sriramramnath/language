@@ -1,55 +1,17 @@
 // Simple Sprite Movement Example
-// This example demonstrates basic sprite creation and keyboard-based movement
+// Move a square around the screen with arrow keys or WASD
 
-game SpriteMovement {
-    title = "Sprite Movement Example"
-    width = 800
-    height = 600
+game "Sprite Movement" resizable auto_fps
+
+player {
+  movement: wasd_arrows
+  speed: 7
+  color: blue
 }
 
-sprite Player {
-    image = "player.png"
-    x = 400
-    y = 300
-    speed = 5
-    
-    on keydown(key) {
-        if key == "LEFT" {
-            x = x - speed
-        }
-        if key == "RIGHT" {
-            x = x + speed
-        }
-        if key == "UP" {
-            y = y - speed
-        }
-        if key == "DOWN" {
-            y = y + speed
-        }
-    }
+ui {
+  "Use Arrow Keys or WASD to move" at topleft
+  "Position: {x}, {y}" at topright
 }
 
-scene Main {
-    player = Player()
-    
-    update {
-        // Keep player within screen bounds
-        if player.x < 0 {
-            player.x = 0
-        }
-        if player.x > 800 {
-            player.x = 800
-        }
-        if player.y < 0 {
-            player.y = 0
-        }
-        if player.y > 600 {
-            player.y = 600
-        }
-    }
-    
-    draw {
-        screen.fill((50, 50, 100))
-        player.draw()
-    }
-}
+start()
