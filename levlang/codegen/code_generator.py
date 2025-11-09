@@ -99,6 +99,11 @@ class CodeGenerator:
         self.emit("# This file was automatically generated from LevLang source code")
         self.emit()
         
+        # Suppress pygame welcome message
+        self.emit("import os")
+        self.emit("os.environ['PYGAME_HIDE_SUPPORT_PROMPT'] = '1'")
+        self.emit()
+        
         # Import statements
         self.emit("import pygame")
         self.emit("import sys")
