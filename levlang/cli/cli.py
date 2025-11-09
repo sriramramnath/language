@@ -21,21 +21,39 @@ from levlang.error.error_reporter import ErrorReporter, ErrorType
 class CLI:
     """Command-line interface for the game language transpiler."""
     
+    BANNER = """
+╻  ┏━╸╻ ╻╻  ┏━┓┏┓╻┏━╸
+┃  ┣╸ ┃┏┛┃  ┣━┫┃┗┫┃╺┓
+┗━╸┗━╸┗┛ ┗━╸╹ ╹╹ ╹┗━┛ 
+-----------------------
+     Levelium Inc.
+-----------------------
+"""
+    
     def __init__(self):
         """Initialize the CLI."""
         self.cache_dir = Path.home() / '.levlang' / 'cache'
         self.cache_dir.mkdir(parents=True, exist_ok=True)
     
-    def transpile_file(self, input_path: str, output_path: Optional[str] = None) -> int:
+    def print_banner(self):
+        """Print the CLI banner."""
+        print(self.BANNER)
+        print(">> CLI version 0.1.0\n")
+    
+    def transpile_file(self, input_path: str, output_path: Optional[str] = None, show_banner: bool = True) -> int:
         """Transpile a LevLang file to Python.
         
         Args:
             input_path: Path to the input .lvl file
             output_path: Path to the output .py file (optional)
+            show_banner: Whether to show the banner (default: True)
             
         Returns:
             Exit code (0 for success, non-zero for failure)
         """
+        if show_banner:
+            self.print_banner()
+        
         # Determine output path if not specified
         if output_path is None:
             input_file = Path(input_path)
@@ -64,7 +82,7 @@ class CLI:
         try:
             with open(output_path, 'w', encoding='utf-8') as f:
                 f.write(generated_code)
-            print(f"Successfully transpiled {input_path} -> {output_path}")
+            print(f"log: Successfully transpiled {input_path} -> {output_path}")
             return 0
         except IOError as e:
             print(f"Error writing file {output_path}: {e}", file=sys.stderr)
@@ -80,6 +98,8 @@ class CLI:
         Returns:
             Exit code (0 for success, non-zero for failure)
         """
+        self.print_banner()
+        
         # Determine output path if not specified
         if output_path is None:
             input_file = Path(input_path)
@@ -90,8 +110,8 @@ class CLI:
             print(f"Error: File not found: {input_path}", file=sys.stderr)
             return 1
         
-        print(f"Watching {input_path} for changes...")
-        print("Press Ctrl+C to stop")
+        print(f"log: Watching {input_path} for changes...")
+        print("log: Press Ctrl+C to stop")
         
         last_mtime = None
         
@@ -115,7 +135,7 @@ class CLI:
                             continue
                         
                         # Run transpilation
-                        print(f"\n[{time.strftime('%H:%M:%S')}] Transpiling...")
+                        print(f"\nlog: [{time.strftime('%H:%M:%S')}] Transpiling...")
                         success, generated_code, errors = self._transpile(source_code, input_path)
                         
                         if success:
@@ -123,23 +143,23 @@ class CLI:
                             try:
                                 with open(output_path, 'w', encoding='utf-8') as f:
                                     f.write(generated_code)
-                                print(f"[{time.strftime('%H:%M:%S')}] ✓ Successfully transpiled to {output_path}")
+                                print(f"log: [{time.strftime('%H:%M:%S')}] ✓ Successfully transpiled to {output_path}")
                             except IOError as e:
-                                print(f"Error writing file: {e}", file=sys.stderr)
+                                print(f"log: Error writing file: {e}", file=sys.stderr)
                         else:
-                            print(f"[{time.strftime('%H:%M:%S')}] ✗ Transpilation failed:")
+                            print(f"log: [{time.strftime('%H:%M:%S')}] ✗ Transpilation failed:")
                             print(errors, file=sys.stderr)
                     
                     # Sleep before checking again
                     time.sleep(0.5)
                     
                 except FileNotFoundError:
-                    print(f"Warning: File {input_path} not found, waiting...", file=sys.stderr)
+                    print(f"log: Warning: File {input_path} not found, waiting...", file=sys.stderr)
                     time.sleep(1)
                     last_mtime = None
                     
         except KeyboardInterrupt:
-            print("\nStopped watching")
+            print("\nlog: Stopped watching")
             return 0
     
     def run_file(self, input_path: str) -> int:
@@ -151,6 +171,8 @@ class CLI:
         Returns:
             Exit code (0 for success, non-zero for failure)
         """
+        self.print_banner()
+        
         # Read source file
         try:
             with open(input_path, 'r', encoding='utf-8') as f:

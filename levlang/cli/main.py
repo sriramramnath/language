@@ -16,10 +16,19 @@ def main():
     )
     
     # Add version argument
+    version_text = """
+╻  ┏━╸╻ ╻╻  ┏━┓┏┓╻┏━╸
+┃  ┣╸ ┃┏┛┃  ┣━┫┃┗┫┃╺┓
+┗━╸┗━╸┗┛ ┗━╸╹ ╹╹ ╹┗━┛ 
+-----------------------
+     Levelium Inc.
+-----------------------
+>> CLI version 0.1.0
+"""
     parser.add_argument(
         '--version',
         action='version',
-        version='LevLang Transpiler v0.1.0'
+        version=version_text
     )
     
     # Create subparsers for commands
