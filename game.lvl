@@ -1,0 +1,43 @@
+// TinyScript - Minimal game language with smart defaults
+// Car Racing Game
+
+game "Car Racing" resizable auto_fps
+
+// Player (supports both WASD and arrows automatically)
+player {
+  frames: "assets/player_car/"
+  movement: wasd_arrows
+  speed: 7
+}
+
+// Road
+road {
+  lanes: 3
+  scrolling: true
+}
+
+// Enemies spawn automatically
+enemy {
+  frames: "assets/enemy_cars/"
+  spawn: random_lane
+  speed: rand(3, 6)
+  move: down
+  
+  offscreen: destroy, score+10
+  collide: gameover
+}
+
+spawn_rate: 2sec
+
+ui {
+  "Score: {score}" at topleft
+  "Move: WASD/Arrows" at topright
+}
+
+gameover {
+  "GAME OVER!"
+  "Score: {score}"
+  "SPACE=Play  ESC=Quit"
+}
+
+start()

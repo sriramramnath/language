@@ -11,8 +11,10 @@ from typing import Optional
 
 from levlang.lexer.lexer import Lexer
 from levlang.parser.parser import Parser
+from levlang.parser.simple_parser import SimpleParser
 from levlang.semantic.semantic_analyzer import SemanticAnalyzer
 from levlang.codegen.code_generator import CodeGenerator
+from levlang.codegen.simple_generator import SimpleCodeGenerator
 from levlang.error.error_reporter import ErrorReporter, ErrorType
 
 
@@ -259,6 +261,10 @@ class CLI:
         if cached_output is not None:
             return True, cached_output, ""
         
+        # Detect if using simple syntax (block-based)
+        if self._is_simple_syntax(source_code):
+            return self._transpile_simple(source_code, filename, cache_key)
+        
         # Create error reporter
         error_reporter = ErrorReporter(source_code, filename)
         
@@ -324,3 +330,44 @@ class CLI:
         self.save_to_cache(cache_key, generated_code)
         
         return True, generated_code, ""
+    
+    def _is_simple_syntax(self, source_code: str) -> bool:
+        """Detect if source uses simple block-based syntax.
+        
+        Args:
+            source_code: The source code to check
+            
+        Returns:
+            True if simple syntax, False otherwise
+        """
+        # Simple syntax uses blocks like "player {", "enemy {", etc.
+        simple_keywords = ['player {', 'enemy {', 'road {', 'ui {', 'gameover {']
+        return any(keyword in source_code for keyword in simple_keywords)
+    
+    def _transpile_simple(self, source_code: str, filename: str, cache_key: str) -> tuple[bool, str, str]:
+        """Transpile using simple parser and generator.
+        
+        Args:
+            source_code: The source code to transpile
+            filename: The source filename for error reporting
+            cache_key: Cache key for storing result
+            
+        Returns:
+            A tuple of (success, generated_code, error_messages)
+        """
+        try:
+            # Parse with simple parser
+            parser = SimpleParser(source_code)
+            ast = parser.parse()
+            
+            # Generate code
+            generator = SimpleCodeGenerator(ast)
+            generated_code = generator.generate()
+            
+            # Save to cache
+            self.save_to_cache(cache_key, generated_code)
+            
+            return True, generated_code, ""
+        except Exception as e:
+            error_msg = f"Error transpiling {filename}: {str(e)}"
+            return False, "", error_msg
