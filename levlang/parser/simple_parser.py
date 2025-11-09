@@ -42,6 +42,10 @@ class SimpleParser:
                     props = match.group(2).strip().split()
                     self.ast['game']['resizable'] = 'resizable' in props
                     self.ast['game']['auto_fps'] = 'auto_fps' in props
+                    # Check for icon property
+                    for prop in props:
+                        if prop.startswith('icon:'):
+                            self.ast['game']['icon'] = prop.split(':', 1)[1]
                 continue
             
             elif line.startswith('player {'):

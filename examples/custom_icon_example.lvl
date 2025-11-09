@@ -1,0 +1,20 @@
+// Example showing how to use a custom icon
+// You can specify an icon file path in the game declaration
+
+// With custom icon file (if you have one):
+// game "My Game" icon:assets/icon.png auto_fps
+
+// Without custom icon (uses default blue square):
+game "Custom Icon Demo" auto_fps
+
+player {
+  movement: wasd_arrows
+  speed: 5
+}
+
+ui {
+  "Look at the window icon!" at topleft
+  "Default: Blue square with white center" at topright
+}
+
+start()

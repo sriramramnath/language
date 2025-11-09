@@ -25,6 +25,16 @@ YELLOW = (255, 255, 0)
 # Create display
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("Car Racing")
+
+# Set custom window icon
+try:
+    icon = pygame.Surface((32, 32))
+    icon.fill((0, 100, 255))  # Blue background
+    pygame.draw.rect(icon, (255, 255, 255), (8, 8, 16, 16))  # White square
+    pygame.display.set_icon(icon)
+except:
+    pass  # If icon setting fails, continue without it
+
 clock = pygame.time.Clock()
 
 class Player:
