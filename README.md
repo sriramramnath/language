@@ -4,12 +4,18 @@ A simplified game development language that transpiles to Python/pygame.
 
 ## Overview
 
-Game Language provides an accessible syntax for game development that compiles to Python code using the pygame library. It reduces boilerplate while maintaining full pygame capabilities.
+LevLang provides an accessible syntax for game development that compiles to Python code using the pygame library. It reduces boilerplate while maintaining full pygame capabilities.
 
-Write games with simplified syntax:
-- Declarative sprite and scene definitions
-- Built-in event handlers for keyboard and mouse input
-- Automatic game loop generation
+LevLang supports two syntax styles:
+
+**Simple Block-Based Syntax** (Recommended for beginners):
+- Minimal, configuration-style syntax
+- Smart defaults for common game patterns
+- Perfect for simple arcade games
+
+**Advanced Declarative Syntax**:
+- Full control over sprites and scenes
+- Custom event handlers
 - Direct pygame access when needed
 
 ## Quick Start
@@ -34,11 +40,53 @@ For development:
 pip install -e ".[dev]"
 ```
 
-### Your First Game
+### Your First Game (Simple Syntax)
+
+Create a file called `racing.lvl`:
+
+```levlang
+// Car Racing Game
+game "Car Racing" resizable auto_fps
+
+player {
+  movement: wasd_arrows
+  speed: 7
+}
+
+road {
+  lanes: 3
+  scrolling: true
+}
+
+enemy {
+  spawn: random_lane
+  speed: rand(3, 6)
+  move: down
+  offscreen: destroy, score+10
+  collide: gameover
+}
+
+spawn_rate: 2sec
+
+ui {
+  "Score: {score}" at topleft
+  "Move: WASD/Arrows" at topright
+}
+
+gameover {
+  "GAME OVER!"
+  "Score: {score}"
+  "SPACE=Play  ESC=Quit"
+}
+
+start()
+```
+
+### Your First Game (Advanced Syntax)
 
 Create a file called `hello.lvl`:
 
-```
+```levlang
 game HelloGame {
     title = "My First Game"
     width = 800
