@@ -1,0 +1,10 @@
+// Geometry Dash Clone - Not Implemented
+
+// A Geometry Dash-style game is not possible with the current version of LevLang.
+// The language engine would need to be significantly upgraded with
+// several complex features.
+
+// Required features that are missing:
+// 1. Side-Scrolling Camera: The engine is designed for a single, static screen, not a level that moves horizontally.
+// 2. Platforming Physics: The engine does not have concepts of gravity or jumping for entities.
+// 3. Pre-defined Level Maps: The current system is for dynamically spawning objects, not for building a precise, pre-designed level layout.

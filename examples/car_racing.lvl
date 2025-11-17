@@ -1,5 +1,6 @@
 // Car Racing Game Example
 // Dodge incoming cars and rack up points!
+// Demonstrates: random spawning, collision detection, score tracking, game over screen
 
 game "Car Racing" resizable auto_fps
 

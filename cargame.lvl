@@ -1,0 +1,56 @@
+// A classic top-down car racing game.
+// Dodge the oncoming traffic to score points.
+
+game "Highway Dodge"
+
+// Define the player's car
+player {
+  // Use a simple shape for the player
+  shape: rectangle
+  color: blue
+  size: 40x70
+  speed: 8
+  movement: wasd_arrows
+}
+
+// Define the road appearance
+road {
+  lanes: 4
+  scrolling: true
+}
+
+// Define the enemy cars
+enemy {
+  // Use simple shapes for enemies
+  shape: rectangle
+  color: random
+  size: 40x70
+  spawn: random_lane
+  speed: rand(5, 7) // Enemies have variable speed
+  move: down
+  
+  // When an enemy goes offscreen, destroy it and add to the score
+  offscreen: destroy, score+1
+  
+  // When an enemy collides with the player, end the game
+  collide: gameover
+}
+
+// Initial spawn rate of one car every 1.5 seconds
+spawn_rate: 1.5sec
+
+// Display the score at the top of the screen
+ui {
+  "Score: {score}" at topleft
+}
+
+// The game over screen
+gameover {
+  "CRASHED!"
+  "Final Score: {score}"
+  "Press SPACE to try again"
+  on_key(SPACE): restart()
+}
+
+// Start the game
+start()

@@ -1,0 +1,44 @@
+// Space Shooter with Basic Shapes
+// Dodge incoming enemies using triangle ship
+// Use WASD or Arrow keys to move
+
+game "Space Shooter" resizable auto_fps
+
+player {
+  movement: wasd_arrows
+  speed: 8
+  shape: triangle
+  size: 40x50
+  color: cyan
+}
+
+road {
+  lanes: 4
+  scrolling: true
+}
+
+enemy {
+  spawn: random_lane
+  speed: rand(3, 7)
+  move: down
+  shape: circle
+  size: 35x35
+  color: random
+  offscreen: destroy, score+10
+  collide: gameover
+}
+
+spawn_rate: 1sec
+
+ui {
+  "Space Shooter - Dodge Enemies!" at topleft
+  "Score: {score}" at topright
+}
+
+gameover {
+  "GAME OVER!"
+  "Final Score: {score}"
+  "SPACE=Play  ESC=Quit"
+}
+
+start()

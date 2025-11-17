@@ -1,5 +1,6 @@
 // Simple Sprite Movement Example
 // Move a square around the screen with arrow keys or WASD
+// Demonstrates: movement, UI text, position tracking, random colors
 
 game "Sprite Movement" resizable auto_fps
 
@@ -12,6 +13,7 @@ player {
 ui {
   "Use Arrow Keys or WASD to move" at topleft
   "Position: {x}, {y}" at topright
+  "Speed: {speed}" at center
 }
 
 start()

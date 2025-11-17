@@ -1,0 +1,44 @@
+// Pong Game with Basic Shapes
+// Classic two-player pong using rectangles and circles
+// Player 1: W/S keys, Player 2: Arrow keys
+
+game "Pong" resizable auto_fps
+
+player {
+  movement: wasd
+  speed: 8
+  shape: rectangle
+  size: 20x100
+  color: white
+}
+
+road {
+  lanes: 0
+  scrolling: false
+}
+
+enemy {
+  spawn: random_lane
+  speed: 8
+  move: down
+  shape: rectangle
+  size: 20x100
+  color: white
+  offscreen: destroy
+  collide: gameover
+}
+
+spawn_rate: 10sec
+
+ui {
+  "Pong - Use W/S and Arrows" at topleft
+  "Score: {score}" at topright
+}
+
+gameover {
+  "GAME OVER!"
+  "Score: {score}"
+  "SPACE=Play  ESC=Quit"
+}
+
+start()

@@ -1,0 +1,42 @@
+// Sprite Dodger - Level 2
+// This game shows how to use image sprites instead of shapes.
+
+game "Sprite Dodger"
+
+player {
+  // Make sure you have images in the 'assets/player_car/' directory
+  frames: "assets/player_car/"
+  speed: 8
+  movement: wasd_arrows
+}
+
+enemy {
+  // Make sure you have images in the 'assets/enemy_cars/' directory
+  frames: "assets/enemy_cars/"
+  spawn: random_lane
+  speed: rand(5, 10) // Slightly faster for level 2
+  move: down
+  
+  offscreen: destroy, score+1
+  collide: gameover
+}
+
+road {
+  lanes: 4
+  scrolling: true
+}
+
+spawn_rate: 0.8sec // More frequent spawns for level 2
+
+ui {
+  "Score: {score}" at topleft
+  "Level 2" at topright
+}
+
+gameover {
+  "GAME OVER"
+  "Score: {score}"
+  "Press SPACE to Play Again"
+}
+
+start()

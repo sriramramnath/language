@@ -1,0 +1,37 @@
+// Space Shooter Game - Complete Edition
+// Classic vertical space shooter with enemies and shooting
+// Demonstrates: player movement, shooting mechanics, enemy spawning, collision detection
+
+game "Space Shooter" 800x600 auto_fps
+
+player {
+  movement: arrows
+  speed: 8
+  weapon: laser
+}
+
+enemy {
+  spawn: random_top
+  speed: rand(2, 5)
+  move: down
+  offscreen: destroy
+  collide: gameover
+  hit: destroy, score+5
+}
+
+spawn_rate: 2sec
+
+ui {
+  "Score: {score}" at topleft
+  "Lives: {lives}" at topright
+  "Press SPACE to shoot" at center
+}
+
+gameover {
+  "GAME OVER!"
+  "Final Score: {score}"
+  "You destroyed {enemies} enemies"
+  "SPACE=Play Again  ESC=Quit"
+}
+
+start()

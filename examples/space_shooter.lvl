@@ -1,5 +1,6 @@
 // Space Shooter Example
 // Classic space shooter with enemies coming from above
+// Demonstrates: shooting mechanics, random enemy speeds, collision detection
 
 game "Space Shooter" resizable auto_fps
 

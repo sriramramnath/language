@@ -1,0 +1,35 @@
+// Space Shooter - Example for a future generic engine
+// NOTE: This file will NOT run yet. The engine needs a generic spawner,
+// event system, and a way to handle player-created projectiles.
+
+component "ship" {
+    shape: "triangle"
+    size: "60x50"
+    speed: 9
+}
+
+component "bullet" {
+    shape: "rectangle"
+    size: "5x15"
+    speed: 12
+    color: "yellow"
+    behavior: "move_up"
+}
+
+entities {
+    player: "ship" {
+        color: "white"
+        position: "bottom_center"
+        controls: "horizontal"
+    }
+}
+
+game {
+    background: "black"
+    
+    // FUTURE FEATURE: A generic spawner for enemies is needed.
+    // spawn: "ship" every 1.5sec at "random_x" with { color: "magenta", behavior: "move_down" }
+    
+    // FUTURE FEATURE: An event for player actions is needed to enable shooting.
+    // on_event(player.presses("space")): "create(bullet) at player.position"
+}

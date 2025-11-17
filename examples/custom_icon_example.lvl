@@ -1,5 +1,6 @@
 // Example showing how to use a custom icon
 // You can specify an icon file path in the game declaration
+// Demonstrates: custom window icons, UI text positioning
 
 // With custom icon file (if you have one):
 // game "My Game" icon:assets/icon.png auto_fps
