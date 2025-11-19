@@ -22,14 +22,25 @@ entities {
         position: "bottom_center"
         controls: "horizontal"
     }
+
+    // Static enemies for dodging prototype
+    enemy1: "ship" {
+        color: "magenta"
+        position: "top_center"
+        behavior: "move_down"
+    }
+
+    enemy2: "ship" {
+        color: "magenta"
+        position: "left(150)"
+        behavior: "move_down"
+    }
 }
 
 game {
     background: "black"
     
-    // FUTURE FEATURE: A generic spawner for enemies is needed.
-    // spawn: "ship" every 1.5sec at "random_x" with { color: "magenta", behavior: "move_down" }
-    
-    // FUTURE FEATURE: An event for player actions is needed to enable shooting.
-    // on_event(player.presses("space")): "create(bullet) at player.position"
+    // Basic collision rules
+    on_event: "player.collide_enemy1 -> game_over"
+    on_event: "player.collide_enemy2 -> game_over"
 }

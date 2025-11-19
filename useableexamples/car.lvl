@@ -1,41 +1,49 @@
-// A classic car-dodging game using simple shapes.
+// Highway Dodger - Updated for LevLang v3
+// Note: Spawners are not supported yet, so enemies are static.
 
-game "Car Dodger"
-
-player {
-  shape: rectangle
-  color: cyan
-  size: 50x80
-  speed: 8
-  movement: wasd_arrows
+component "player_car" {
+    shape: "rectangle"
+    size: "50x80"
+    color: "cyan"
+    speed: 8
 }
 
-enemy "car" {
-  shape: rectangle
-  color: random
-  size: 50x80
-  speed: rand(4, 10)
-  spawn: random_lane // Explicitly use lane-based spawning
-  offscreen: destroy, score+1
-  collide: gameover
+component "enemy_car" {
+    shape: "rectangle"
+    size: "50x80"
+    color: "red"
+    speed: 6
+    behavior: "move_down"
 }
 
-road {
-  lanes: 4
-  scrolling: true
+entities {
+    player: "player_car" {
+        position: "bottom_center"
+        controls: "horizontal"
+    }
+
+    enemy1: "enemy_car" {
+        position: "center"
+    }
+
+    enemy2: "enemy_car" {
+        position: "left(100)"
+    }
+    
+    enemy3: "enemy_car" {
+        position: "right(100)"
+    }
 }
 
-spawn: random("car")
-spawn_rate: 1sec
+game {
+    background: "#0c0f16"
+    
+    // Simple collision rule
+    on_event: "player.collide_enemy1 -> game_over"
+    on_event: "player.collide_enemy2 -> game_over"
+    on_event: "player.collide_enemy3 -> game_over"
 
-ui {
-  "Score: {score}" at topleft
+    ui {
+        display: "Score: {score} at (20, 20)"
+    }
 }
-
-gameover {
-  "GAME OVER"
-  "Score: {score}"
-  "Press SPACE to Play Again"
-}
-
-start()

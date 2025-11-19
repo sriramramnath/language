@@ -1,43 +1,64 @@
-// TinyScript - Minimal game language with smart defaults
-// Car Racing Game
+// LevLang v0.2 — explicit sprite + shape blocks, no implicit defaults
 
-game "Car Racing" resizable auto_fps
-
-// Player (supports both WASD and arrows automatically)
-player {
-  frames: "assets/player_car/"
-  movement: wasd_arrows
-  speed: 7
+game {
+  shape: viewport
+  title: "Car Racing"
+  size: 960x540
+  background: "#101820"
+  resizable: true
+  fps_mode: auto
 }
 
-// Road
 road {
+  sprite_sheet: "assets/road/lanes_strip.png"
+  sprite_size: 320x960
   lanes: 3
-  scrolling: true
+  scroll_speed: 4
+  wrap: true
 }
 
-// Enemies spawn automatically
+player {
+  sprite_sheet: "assets/player_car/player_strip.png"
+  sprite_size: 64x128
+  start_position: center_bottom
+  controls: wasd_arrows
+  speed: 7
+  lane_lock: 3
+  collider_box: 44x110
+  on_collide enemy: gameover
+}
+
 enemy {
-  frames: "assets/enemy_cars/"
-  spawn: random_lane
+  sprite_sheet: "assets/enemy_cars/enemy_strip.png"
+  sprite_size: 64x128
+  direction: down
   speed: rand(3, 6)
-  move: down
-  
-  offscreen: destroy, score+10
-  collide: gameover
+  offscreen: destroy score+10
 }
 
-spawn_rate: 2sec
+enemy_spawner {
+  shape: script
+  target: enemy
+  lanes: 3
+  spawn_rate: 2sec
+  spawn_lane: random
+}
 
 ui {
-  "Score: {score}" at topleft
-  "Move: WASD/Arrows" at topright
+  "Score: {score}" at topleft offset 24,24
+  "Move: WASD/Arrows" at topright offset -24,24
 }
 
 gameover {
-  "GAME OVER!"
-  "Score: {score}"
-  "SPACE=Play  ESC=Quit"
+  shape: overlay
+  background: "rgba(0, 0, 0, 0.7)"
+  font: "assets/fonts/arcade.ttf"
+  text title: "GAME OVER!"
+  text score: "Score: {score}"
+  text hint: "SPACE=Play  ESC=Quit"
 }
 
-start()
+start {
+  shape: script
+  scene: game
+}

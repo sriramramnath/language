@@ -93,13 +93,26 @@ class SimpleParser:
     def _parse_property_line(self, line: str, target_dict: Dict):
         if ':' in line:
             key, value = line.split(':', 1)
-            target_dict[key.strip()] = self._parse_value(value.strip())
+            key = key.strip()
+            parsed_value = self._parse_value(value.strip())
+            if key in target_dict:
+                existing = target_dict[key]
+                if isinstance(existing, list):
+                    existing.append(parsed_value)
+                else:
+                    target_dict[key] = [existing, parsed_value]
+            else:
+                target_dict[key] = parsed_value
         else:
             self._report_error(f"Invalid property format. Expected 'key: value', but got '{line}'.")
 
     def _parse_value(self, value: str) -> Any:
         if value.startswith('"') and value.endswith('"'):
-            return value[1:-1]
+            inner = value[1:-1]
+            try:
+                return bytes(inner, "utf-8").decode("unicode_escape")
+            except UnicodeDecodeError:
+                return inner.replace(r'\"', '"')
         try:
             if '.' in value: return float(value)
             return int(value)

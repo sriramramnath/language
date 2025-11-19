@@ -48,7 +48,8 @@ class TokenType(Enum):
     AND = auto()
     OR = auto()
     NOT = auto()
-    
+    IN = auto()
+
     # Delimiters
     LEFT_BRACE = auto()
     RIGHT_BRACE = auto()

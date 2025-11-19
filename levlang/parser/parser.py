@@ -392,7 +392,7 @@ class Parser:
                 node_type="binary_op",
                 expr_type="binary_op",
                 location=op_token.location,
-                operator="||",
+                operator="or",
                 left=left,
                 right=right
             )
@@ -410,7 +410,7 @@ class Parser:
                 node_type="binary_op",
                 expr_type="binary_op",
                 location=op_token.location,
-                operator="&&",
+                operator="and",
                 left=left,
                 right=right
             )
@@ -764,11 +764,8 @@ class Parser:
         start_token = self.expect(TokenType.FOR, "Expected 'for'")
         var_token = self.expect(TokenType.IDENTIFIER, "Expected variable name after 'for'")
         
-        # We need an 'in' keyword - but it's not in our token types yet
-        # For now, we'll use IDENTIFIER and check the value
-        in_token = self.expect(TokenType.IDENTIFIER, "Expected 'in' after variable name")
-        if in_token.value != "in":
-            self.report_error(f"Expected 'in', got '{in_token.value}'", in_token.location)
+        # Expect the 'in' keyword token (lexer produces TokenType.IN)
+        in_token = self.expect(TokenType.IN, "Expected 'in' after variable name")
         
         iterable = self.parse_expression()
         

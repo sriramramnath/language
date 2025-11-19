@@ -24,6 +24,7 @@ class Lexer:
         'while': TokenType.WHILE,
         'for': TokenType.FOR,
         'return': TokenType.RETURN,
+        'in': TokenType.IN,
         'true': TokenType.TRUE,
         'false': TokenType.FALSE,
     }

@@ -230,8 +230,9 @@ class SemanticAnalyzer:
     
     def visit_assignment(self, node: AssignmentNode):
         """Visit an assignment node."""
-        # Declare variable if it doesn't exist in current scope
-        if not self.symbol_table.lookup_local(node.target):
+        # Check if variable exists in current scope or any parent scope
+        # Only declare as new variable if it doesn't exist anywhere
+        if not self.symbol_table.lookup(node.target):
             self.symbol_table.declare(node.target, SymbolKind.VARIABLE, node.location)
         
         # Visit the value expression

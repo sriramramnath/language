@@ -30,6 +30,12 @@ class CodeGenerator:
         self.game_config = None
         self.sprites = []
         self.scenes = []
+        
+        # Track current context for variable scoping
+        self.current_sprite_properties = set()  # Properties of the current sprite
+        self.local_variables = set()  # Local variables in current scope
+        self.in_sprite_method = False  # Are we inside a sprite method?
+        self.scope_stack = []  # Stack of local variable sets for nested scopes
     
     def generate(self) -> str:
         """Generate Python code from the AST.
@@ -64,6 +70,32 @@ class CodeGenerator:
         """Decrease indentation level."""
         if self.indent_level > 0:
             self.indent_level -= 1
+    
+    def enter_scope(self):
+        """Enter a new local scope (for methods, loops, if statements, etc.)."""
+        self.scope_stack.append(self.local_variables.copy())
+        self.local_variables = set()
+    
+    def exit_scope(self):
+        """Exit the current local scope and restore the parent scope."""
+        if self.scope_stack:
+            self.local_variables = self.scope_stack.pop()
+        else:
+            self.local_variables = set()
+    
+    def is_sprite_property(self, name: str) -> bool:
+        """Check if a name is a sprite property (needs self. prefix)."""
+        return self.in_sprite_method and name in self.current_sprite_properties
+    
+    def is_local_variable(self, name: str) -> bool:
+        """Check if a name is a local variable (no self. prefix)."""
+        # Check current scope and all parent scopes
+        if name in self.local_variables:
+            return True
+        for scope_vars in self.scope_stack:
+            if name in scope_vars:
+                return True
+        return False
     
     def visit_program(self, node: ProgramNode):
         """Visit a program node and generate code."""
@@ -113,6 +145,10 @@ class CodeGenerator:
         
         Generates a Python class inheriting from pygame.sprite.Sprite.
         """
+        # Track sprite properties for correct self. usage
+        self.current_sprite_properties = set(node.properties.keys())
+        self.in_sprite_method = False
+        
         # Class definition
         self.emit(f"class {node.name}(pygame.sprite.Sprite):")
         self.indent()
@@ -151,6 +187,10 @@ class CodeGenerator:
                 self.visit_event_handler_method(method)
         
         self.dedent()
+        
+        # Clear sprite context
+        self.current_sprite_properties = set()
+        self.in_sprite_method = False
     
     def visit_event_handler_method(self, node: EventHandlerNode):
         """Generate a method for an event handler within a sprite.
@@ -158,6 +198,14 @@ class CodeGenerator:
         Args:
             node: The event handler node
         """
+        # Enter sprite method context
+        self.in_sprite_method = True
+        self.enter_scope()
+        
+        # Method parameters are local variables
+        for param in node.parameters:
+            self.local_variables.add(param)
+        
         # Create method name from event type
         method_name = f"handle_{node.event_type}"
         
@@ -178,6 +226,10 @@ class CodeGenerator:
             self.emit("pass")
         
         self.dedent()
+        
+        # Exit sprite method context
+        self.exit_scope()
+        self.in_sprite_method = False
     
     def visit_statement(self, node: StatementNode):
         """Visit a statement node and emit code.
@@ -204,8 +256,18 @@ class CodeGenerator:
     def visit_assignment_statement(self, node: AssignmentNode):
         """Visit an assignment statement and emit code."""
         value_code = self.visit(node.value)
-        # Check if target needs self. prefix (for sprite properties)
-        self.emit(f"self.{node.target} = {value_code}")
+        
+        # Determine if this is a sprite property or local variable assignment
+        if self.is_local_variable(node.target):
+            # Assign to existing local variable (no self.)
+            self.emit(f"{node.target} = {value_code}")
+        elif self.is_sprite_property(node.target):
+            # Assign to sprite property (with self.)
+            self.emit(f"self.{node.target} = {value_code}")
+        else:
+            # New local variable declaration
+            self.local_variables.add(node.target)
+            self.emit(f"{node.target} = {value_code}")
     
     def visit_if_statement(self, node: IfNode):
         """Visit an if statement and emit code."""
@@ -213,6 +275,8 @@ class CodeGenerator:
         self.emit(f"if {condition_code}:")
         self.indent()
         
+        # Note: We don't create a new scope for if blocks in Python
+        # Variables declared in if blocks are visible in the parent scope
         if node.then_block:
             for stmt in node.then_block:
                 self.visit_statement(stmt)
@@ -245,9 +309,15 @@ class CodeGenerator:
     def visit_for_statement(self, node: ForNode):
         """Visit a for statement and emit code."""
         iterable_code = self.visit(node.iterable)
+        
+        # Loop variable is a local variable
+        self.local_variables.add(node.variable)
+        
         self.emit(f"for {node.variable} in {iterable_code}:")
         self.indent()
         
+        # Note: Like if statements, for loops don't create a new scope in Python
+        # Variables declared in the loop body are visible in the parent scope
         if node.body:
             for stmt in node.body:
                 self.visit_statement(stmt)
@@ -282,61 +352,37 @@ class CodeGenerator:
         self.emit("# Initialize pygame")
         self.emit("pygame.init()")
         self.emit()
-        
-        # Set up display
-        if self.game_config:
-            # Extract game properties
-            width = 800  # Default
-            height = 600  # Default
-            title = "Game"  # Default
-            
-            if "width" in self.game_config.properties:
+
+        # Set up display only when explicit configuration is provided.
+        # We do not apply implicit defaults here; if the LevLang source
+        # does not provide width/height/title, the generated code will
+        # skip display setup so that the output reflects only custom
+        # blocks declared by the author.
+        if self.game_config and self.game_config.properties:
+            has_width = "width" in self.game_config.properties
+            has_height = "height" in self.game_config.properties
+            has_title = "title" in self.game_config.properties
+
+            if has_width and has_height and has_title:
+                # Extract explicit game properties
                 width_node = self.game_config.properties["width"]
-                width_code = self.visit(width_node)
-                width = width_code
-            
-            if "height" in self.game_config.properties:
                 height_node = self.game_config.properties["height"]
-                height_code = self.visit(height_node)
-                height = height_code
-            
-            if "title" in self.game_config.properties:
                 title_node = self.game_config.properties["title"]
+                width_code = self.visit(width_node)
+                height_code = self.visit(height_node)
                 title_code = self.visit(title_node)
-                title = title_code
-            
-            self.emit("# Set up display")
-            self.emit(f"screen = pygame.display.set_mode(({width}, {height}))")
-            self.emit(f"pygame.display.set_caption({title})")
-            self.emit()
-            self.emit("# Set custom window icon")
-            self.emit("try:")
-            self.indent()
-            self.emit('icon = pygame.image.load("levelanglogo.png")')
-            self.emit("pygame.display.set_icon(icon)")
-            self.dedent()
-            self.emit("except:")
-            self.indent()
-            self.emit("# If icon loading fails, create a simple fallback icon")
-            self.emit("try:")
-            self.indent()
-            self.emit("icon = pygame.Surface((32, 32))")
-            self.emit("icon.fill((0, 100, 255))")
-            self.emit("pygame.draw.rect(icon, (255, 255, 255), (8, 8, 16, 16))")
-            self.emit("pygame.display.set_icon(icon)")
-            self.dedent()
-            self.emit("except:")
-            self.indent()
-            self.emit("pass")
-            self.dedent()
-            self.dedent()
+
+                self.emit("# Set up display (explicit configuration present)")
+                self.emit(f"screen = pygame.display.set_mode(({width_code}, {height_code}))")
+                self.emit(f"pygame.display.set_caption({title_code})")
+                self.emit()
+            else:
+                self.emit("# Note: game block present but missing explicit width/height/title; skipping display setup to avoid implicit defaults")
+                self.emit()
         else:
-            self.emit("# Set up display")
-            self.emit("screen = pygame.display.set_mode((800, 600))")
-            self.emit("pygame.display.set_caption('Game')")
-        
-        self.emit()
-        
+            self.emit("# No explicit game block provided; skipping display setup")
+            self.emit()
+
         # Initialize clock for frame rate control
         self.emit("# Initialize clock for frame rate control")
         self.emit("clock = pygame.time.Clock()")
@@ -355,11 +401,27 @@ class CodeGenerator:
                 self.emit(f"{sprite_var} = {sprite.name}()")
             self.emit()
         
+        # Scene switching support
+        if self.scenes and len(self.scenes) > 1:
+            self.emit("# Scene management")
+            self.emit("current_scene = 0  # Index of current scene")
+            self.emit(f"num_scenes = {len(self.scenes)}")
+            self.emit()
+        
         # Main game loop
         self.emit("# Main game loop")
         self.emit("running = True")
         self.emit("while running:")
         self.indent()
+        
+        # Add bounds checking for multi-scene games
+        if self.scenes and len(self.scenes) > 1:
+            self.emit("# Clamp scene index to valid range")
+            self.emit("if current_scene < 0 or current_scene >= num_scenes:")
+            self.indent()
+            self.emit("current_scene = 0  # Reset to first scene")
+            self.dedent()
+            self.emit()
         
         # Event handling
         self.emit("# Event handling")
@@ -376,22 +438,54 @@ class CodeGenerator:
         self.dedent()
         self.emit()
         
-        # Update section
+        # Update section - with scene switching
         if self.scenes:
-            scene = self.scenes[0]  # Use first scene
-            if scene.update_block:
-                self.emit("# Update")
-                for stmt in scene.update_block:
-                    self.visit_statement(stmt)
+            if len(self.scenes) == 1:
+                # Single scene - no switching needed
+                scene = self.scenes[0]
+                if scene.update_block:
+                    self.emit("# Update")
+                    for stmt in scene.update_block:
+                        self.visit_statement(stmt)
+                    self.emit()
+            else:
+                # Multiple scenes - generate if/elif chain
+                self.emit("# Update (scene-specific)")
+                for i, scene in enumerate(self.scenes):
+                    if scene.update_block:
+                        if i == 0:
+                            self.emit(f"if current_scene == {i}:")
+                        else:
+                            self.emit(f"elif current_scene == {i}:")
+                        self.indent()
+                        for stmt in scene.update_block:
+                            self.visit_statement(stmt)
+                        self.dedent()
                 self.emit()
         
-        # Draw section
+        # Draw section - with scene switching
         if self.scenes:
-            scene = self.scenes[0]  # Use first scene
-            if scene.draw_block:
-                self.emit("# Draw")
-                for stmt in scene.draw_block:
-                    self.visit_statement(stmt)
+            if len(self.scenes) == 1:
+                # Single scene - no switching needed
+                scene = self.scenes[0]
+                if scene.draw_block:
+                    self.emit("# Draw")
+                    for stmt in scene.draw_block:
+                        self.visit_statement(stmt)
+                    self.emit()
+            else:
+                # Multiple scenes - generate if/elif chain
+                self.emit("# Draw (scene-specific)")
+                for i, scene in enumerate(self.scenes):
+                    if scene.draw_block:
+                        if i == 0:
+                            self.emit(f"if current_scene == {i}:")
+                        else:
+                            self.emit(f"elif current_scene == {i}:")
+                        self.indent()
+                        for stmt in scene.draw_block:
+                            self.visit_statement(stmt)
+                        self.dedent()
                 self.emit()
         
         # Update display and tick clock
@@ -541,7 +635,17 @@ class CodeGenerator:
         Returns:
             Python code representing the identifier
         """
-        return node.name
+        # Check if this identifier needs self. prefix
+        if self.is_local_variable(node.name):
+            # Local variable - no prefix
+            return node.name
+        elif self.is_sprite_property(node.name):
+            # Sprite property - needs self. prefix
+            return f"self.{node.name}"
+        else:
+            # Unknown - assume it's a global/builtin (no prefix)
+            # This handles things like pygame constants, built-in functions, etc.
+            return node.name
     
     def visit_binary_op(self, node: BinaryOpNode) -> str:
         """Visit a binary operation node and generate code.

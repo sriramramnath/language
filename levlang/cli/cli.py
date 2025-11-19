@@ -6,24 +6,38 @@ import time
 import hashlib
 import subprocess
 import tempfile
+import re
 from pathlib import Path
 from typing import Optional
 
 from levlang.parser.simple_parser import SimpleParser
+from levlang.parser.block_parser import BlockParser
 from levlang.codegen.simple_generator import SimpleCodeGenerator
+from levlang.codegen.block_generator import BlockCodeGenerator
 from levlang.error.error_reporter import ErrorReporter, ErrorType
+from levlang.lexer import Lexer
+from levlang.parser import Parser
+from levlang.semantic import SemanticAnalyzer
+from levlang.codegen import CodeGenerator
+
+# Import reserved keywords for parser detection
+RESERVED_KEYWORDS = set(Lexer.KEYWORDS.keys()) | {'component', 'entities'}
 
 
 class CLI:
     """Command-line interface for the LevLang transpiler."""
     
+    # Transpiler version - update when behavior changes to invalidate cache
+    VERSION = "0.3.1"
+    
     BANNER = """
-╻  ┏━╸╻ ╻╻  ┏━┓┏┓╻┏━╸
-┃  ┣╸ ┃┏┛┃  ┣━┫┃┗┫┃╺┓
-┗━╸┗━╸┗┛ ┗━╸╹ ╹╹ ╹┗━┛ v3.0
+ ╻  ┏━╸╻ ╻╻  ┏━┓┏┓╻┏━╸
+ ┃  ┣╸ ┃┏┛┃  ┣━┫┃┗┫┃╺┓
+ ┗━╸┗━╸┗┛ ┗━╸╹ ╹╹ ╹┗━┛
 -----------------------
-  Component Architecture
+    Levelium Inc.
 -----------------------
+
 """
     
     def __init__(self):
@@ -51,7 +65,9 @@ class CLI:
             print(f"Error: File not found: {input_path}", file=sys.stderr)
             return 1
         
-        success, generated_code, errors = self._transpile(source_code, input_path)
+        success, generated_code, errors = self._generate_code(
+            source_code, input_path, use_cache=True
+        )
         
         if not success:
             print(errors, file=sys.stderr)
@@ -86,7 +102,9 @@ class CLI:
                 print(f"Error reading file {current_level_path}: {e}", file=sys.stderr)
                 return 1
             
-            success, generated_code, errors = self._transpile(source_code, current_level_path)
+            success, generated_code, errors = self._generate_code(
+                source_code, current_level_path, use_cache=True
+            )
             
             if not success:
                 print(errors, file=sys.stderr)
@@ -107,15 +125,20 @@ class CLI:
                     encoding='utf-8'
                 )
 
-                for line in iter(process.stdout.readline, ''):
-                    line = line.strip()
-                    if line.startswith('__NEXT_LEVEL__'):
-                        next_level_path = line.split(':', 1)[1]
-                        print(f"log: Transitioning to next level: {next_level_path}")
-                        process.terminate()
-                        break
-                    elif line:
-                        print(line)
+                if process.stdout:
+                    for line in iter(process.stdout.readline, ''):
+                        line = line.strip()
+                        if line.startswith('__NEXT_LEVEL__'):
+                            parts = line.split(':', 1)
+                            if len(parts) == 2 and parts[1].strip():
+                                next_level_path = parts[1].strip()
+                                print(f"log: Transitioning to next level: {next_level_path}")
+                                process.terminate()
+                                break
+                            else:
+                                print(f"warning: Malformed level transition marker: {line}", file=sys.stderr)
+                        elif line:
+                            print(line)
 
                 try:
                     stdout, stderr = process.communicate(timeout=2)
@@ -134,17 +157,134 @@ class CLI:
         print("log: Game sequence finished.")
         return 0
 
-    def _transpile(self, source_code: str, filename: str) -> tuple[bool, str, str]:
-        """Run the new component-based transpilation pipeline."""
-        error_reporter = ErrorReporter(source_code, filename)
+    def _generate_code(
+        self, source_code: str, filename: str, use_cache: bool = True
+    ) -> tuple[bool, str, str]:
+        # Determine pipeline for cache key
+        if self._is_component_syntax(source_code):
+            pipeline = "component"
+        elif self._is_block_syntax(source_code):
+            pipeline = "blocks"
+        else:
+            pipeline = "advanced"
         
+        cache_key = None
+        if use_cache:
+            cache_key = self.get_cache_key(source_code, filename, pipeline)
+            cached = self.get_cached_output(cache_key)
+            if cached is not None:
+                return True, cached, ""
+
+        success, generated_code, errors = self._transpile(source_code, filename)
+
+        if success and use_cache and cache_key:
+            self.save_to_cache(cache_key, generated_code)
+
+        return success, generated_code, errors
+
+    def _transpile(self, source_code: str, filename: str) -> tuple[bool, str, str]:
+        """Route source code through the appropriate transpilation pipeline."""
+        if self._is_component_syntax(source_code):
+            return self._transpile_component(source_code, filename)
+        if self._is_block_syntax(source_code):
+            return self._transpile_blocks(source_code, filename)
+        return self._transpile_advanced(source_code, filename)
+
+    def _is_component_syntax(self, source_code: str) -> bool:
+        """Heuristically detect the component (SimpleParser) syntax."""
+        patterns = (
+            r'^\s*component\s+"',
+            r'^\s*entities\s*\{',
+        )
+        return any(re.search(pattern, source_code, re.MULTILINE) for pattern in patterns)
+
+    def _is_block_syntax(self, source_code: str) -> bool:
+        """Detect generalized block syntax (name { ... })."""
+        # Block syntax should NOT match reserved keywords (dynamically built from lexer)
+        # Build negative lookahead pattern from RESERVED_KEYWORDS
+        keyword_pattern = '|'.join(rf'{kw}\b' for kw in sorted(RESERVED_KEYWORDS))
+        block_pattern = rf'^\s*(?!{keyword_pattern})([A-Za-z_]\w*)\s*\{{'
+        return re.search(block_pattern, source_code, re.MULTILINE) is not None
+
+    def _transpile_component(self, source_code: str, filename: str) -> tuple[bool, str, str]:
+        error_reporter = ErrorReporter(source_code, filename)
         parser = SimpleParser(source_code, error_reporter)
         ast = parser.parse()
-        
+
         if error_reporter.has_errors():
             return False, "", error_reporter.format_all()
-        
+
         generator = SimpleCodeGenerator(ast)
-        generated_code = generator.generate()
+        return True, generator.generate(), ""
+
+    def _transpile_blocks(self, source_code: str, filename: str) -> tuple[bool, str, str]:
+        error_reporter = ErrorReporter(source_code, filename)
+        parser = BlockParser(source_code, error_reporter)
+        ast = parser.parse()
+
+        if error_reporter.has_errors():
+            return False, "", error_reporter.format_all()
+
+        generator = BlockCodeGenerator(ast)
+        return True, generator.generate(), ""
+
+    def _transpile_advanced(self, source_code: str, filename: str) -> tuple[bool, str, str]:
+        lexer = Lexer(source_code, filename)
+        tokens = lexer.tokenize()
+        if lexer.errors:
+            return False, "", "\n".join(lexer.errors)
+
+        parser = Parser(tokens)
+        ast = parser.parse()
+        if parser.has_errors():
+            return False, "", parser.format_all_errors(source_code.splitlines())
+
+        analyzer = SemanticAnalyzer(ast)
+        if not analyzer.analyze():
+            messages = "\n".join(str(err) for err in analyzer.get_errors())
+            return False, "", messages
+
+        generator = CodeGenerator(ast)
+        return True, generator.generate(), ""
+
+    def get_cache_key(self, source_code: str, filename: str, pipeline: str = "") -> str:
+        """Generate a deterministic cache key for a source file.
         
-        return True, generated_code, ""
+        Args:
+            source_code: The source code content
+            filename: The source file name
+            pipeline: The transpiler pipeline identifier (component/blocks/advanced)
+            
+        Returns:
+            A hex digest cache key
+        """
+        hasher = hashlib.sha256()
+        # Include version to invalidate cache when transpiler changes
+        hasher.update(self.VERSION.encode("utf-8"))
+        hasher.update(b"\0")
+        # Include pipeline to invalidate cache when routing changes
+        hasher.update(pipeline.encode("utf-8"))
+        hasher.update(b"\0")
+        hasher.update(filename.encode("utf-8"))
+        hasher.update(b"\0")
+        hasher.update(source_code.encode("utf-8"))
+        return hasher.hexdigest()
+
+    def get_cached_output(self, cache_key: str) -> Optional[str]:
+        """Return cached Python code for the given cache key, if available."""
+        cache_path = self.cache_dir / cache_key
+        if not cache_path.exists():
+            return None
+        try:
+            return cache_path.read_text(encoding="utf-8")
+        except IOError:
+            return None
+
+    def save_to_cache(self, cache_key: str, generated_code: str) -> None:
+        """Persist generated Python code in the cache directory."""
+        cache_path = self.cache_dir / cache_key
+        try:
+            cache_path.write_text(generated_code, encoding="utf-8")
+        except IOError:
+            # Cache failures should not stop the transpilation flow.
+            pass
