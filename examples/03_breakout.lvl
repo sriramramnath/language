@@ -1,0 +1,57 @@
+// Breakout / Arkanoid
+// Break all the bricks with the ball
+
+game "Breakout"
+
+paddle {
+    shape: rectangle
+    size: 100x20
+    color: blue
+    position: bottom_center
+    movement: horizontal
+    controls: mouse_x
+    speed: 8
+}
+
+ball {
+    shape: circle
+    size: 15x15
+    color: white
+    position: center
+    speed: 6
+    behavior: bounce_angle
+    on_collide: paddle: bounce
+    on_collide: brick: destroy, score+10
+    offscreen_bottom: lose_life
+}
+
+brick {
+    shape: rectangle
+    size: 60x20
+    color: random
+    grid: 10x6
+    position: top
+    spacing: 5
+}
+
+lives: 3
+
+ui {
+    "Score: {score}" at topleft
+    "Lives: {lives}" at topright
+}
+
+gameover {
+    "GAME OVER!"
+    "Final Score: {score}"
+    "SPACE=Restart ESC=Quit"
+}
+
+victory {
+    "YOU WIN!"
+    "Score: {score}"
+    "SPACE=Next Level"
+}
+
+start()
+

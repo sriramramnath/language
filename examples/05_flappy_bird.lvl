@@ -1,0 +1,56 @@
+// Flappy Bird
+// Tap to fly, avoid the pipes!
+
+game "Flappy Bird"
+
+player {
+    shape: circle
+    size: 30x30
+    color: yellow
+    position: left(100)
+    physics: gravity
+    gravity: 0.5
+    controls: tap_jump
+    jump_force: -8
+    on_collide: pipe: gameover
+    on_collide: ground: gameover
+}
+
+pipe {
+    shape: rectangle
+    size: 60x400
+    color: green
+    spawn: right
+    move: left
+    speed: 3
+    gap: 150
+    spawn_rate: 2sec
+    offscreen: destroy, score+1
+}
+
+ground {
+    shape: rectangle
+    size: 800x100
+    color: brown
+    position: bottom
+    scrolling: true
+    scroll_speed: 3
+}
+
+background {
+    color: skyblue
+}
+
+ui {
+    "Score: {score}" at topcenter
+}
+
+gameover {
+    "GAME OVER!"
+    "Score: {score}"
+    "Best: {highscore}"
+    "TAP to Restart"
+}
+
+start()
+

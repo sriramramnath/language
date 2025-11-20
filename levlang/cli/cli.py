@@ -288,3 +288,48 @@ class CLI:
         except IOError:
             # Cache failures should not stop the transpilation flow.
             pass
+
+    def watch_mode(self, input_path: str, output_path: Optional[str] = None) -> int:
+        """Watch a LevLang file and automatically retranspile on changes."""
+        self.print_banner()
+        
+        if not Path(input_path).exists():
+            print(f"Error: File not found: {input_path}", file=sys.stderr)
+            return 1
+        
+        if output_path is None:
+            output_path = str(Path(input_path).with_suffix('.py'))
+        
+        print(f"Watching {input_path} for changes...")
+        print(f"Output: {output_path}")
+        print("Press Ctrl+C to stop.\n")
+        
+        # Initial transpile
+        last_mtime = Path(input_path).stat().st_mtime
+        result = self.transpile_file(input_path, output_path, show_banner=False)
+        if result == 0:
+            print(f"[{time.strftime('%H:%M:%S')}] Transpiled successfully")
+        else:
+            print(f"[{time.strftime('%H:%M:%S')}] Transpilation failed", file=sys.stderr)
+        
+        # Watch for changes
+        try:
+            while True:
+                time.sleep(0.5)  # Check every 500ms
+                
+                if not Path(input_path).exists():
+                    print(f"Error: File {input_path} no longer exists", file=sys.stderr)
+                    return 1
+                
+                current_mtime = Path(input_path).stat().st_mtime
+                if current_mtime != last_mtime:
+                    last_mtime = current_mtime
+                    print(f"\n[{time.strftime('%H:%M:%S')}] File changed, retranspiling...")
+                    result = self.transpile_file(input_path, output_path, show_banner=False)
+                    if result == 0:
+                        print(f"[{time.strftime('%H:%M:%S')}] Transpiled successfully")
+                    else:
+                        print(f"[{time.strftime('%H:%M:%S')}] Transpilation failed", file=sys.stderr)
+        except KeyboardInterrupt:
+            print("\n\nWatch mode stopped.")
+            return 0

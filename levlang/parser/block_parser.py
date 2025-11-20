@@ -98,6 +98,16 @@ class BlockParser:
             self.ast["globals"]["start"] = True
             return
 
+        # Handle "game <title>" syntax - convert to game block with title property
+        game_title_match = re.match(r'^\s*game\s+"([^"]+)"\s*$', line, re.IGNORECASE)
+        if game_title_match:
+            # Create an implicit game block with the title
+            title = game_title_match.group(1)
+            if "game" not in self.ast["blocks"]:
+                self.ast["blocks"]["game"] = {}
+            self.ast["blocks"]["game"]["title"] = title
+            return
+
         if ":" in line:
             key, value = line.split(":", 1)
             parsed = self._parse_value(value.strip())

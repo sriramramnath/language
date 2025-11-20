@@ -1,0 +1,76 @@
+// Space Invaders
+// Shoot the descending alien army!
+
+game "Space Invaders"
+
+player {
+    shape: triangle
+    size: 40x30
+    color: green
+    position: bottom_center
+    movement: horizontal
+    controls: arrows
+    speed: 6
+    shoot: space
+    on_collide: enemy: gameover
+}
+
+bullet {
+    shape: rectangle
+    size: 3x10
+    color: yellow
+    speed: 10
+    move: up
+    owner: player
+    on_collide: enemy: destroy, score+100
+    offscreen: destroy
+}
+
+enemy {
+    shape: rectangle
+    size: 30x30
+    color: red
+    grid: 11x5
+    position: top
+    move: wave_descend
+    speed: 2
+    shoot_rate: 2sec
+    shoot_target: player
+}
+
+enemy_bullet {
+    shape: rectangle
+    size: 3x10
+    color: red
+    speed: 8
+    move: down
+    on_collide: player: gameover
+    offscreen: destroy
+}
+
+barrier {
+    shape: rectangle
+    size: 80x60
+    color: cyan
+    count: 4
+    position: bottom_spread
+    health: 3
+}
+
+score: 0
+lives: 3
+
+ui {
+    "Score: {score}" at topleft
+    "Lives: {lives}" at topright
+    "High: {highscore}" at topcenter
+}
+
+gameover {
+    "GAME OVER!"
+    "Score: {score}"
+    "SPACE=Play Again"
+}
+
+start()
+

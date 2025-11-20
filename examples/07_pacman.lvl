@@ -1,0 +1,77 @@
+// Pac-Man Style Game
+// Collect dots, avoid ghosts, eat power pellets!
+
+game "Pac-Man"
+
+player {
+    shape: circle
+    size: 30x30
+    color: yellow
+    position: center
+    movement: grid_wasd
+    speed: 4
+    animation: chomp
+    on_collide: dot: destroy, score+10
+    on_collide: power_pellet: destroy, score+50, power_mode(5sec)
+    on_collide: ghost: check_power_mode
+}
+
+ghost {
+    shape: circle
+    size: 30x30
+    color: random(red, pink, cyan, orange)
+    count: 4
+    spawn: corners
+    movement: ai_chase
+    ai_mode: scatter, chase
+    speed: 3.5
+    vulnerable_color: blue
+    on_power_mode: flee, vulnerable
+    on_collide: player: eat_or_die
+}
+
+dot {
+    shape: circle
+    size: 5x5
+    color: white
+    grid: maze_pattern
+    count: 240
+}
+
+power_pellet {
+    shape: circle
+    size: 15x15
+    color: white
+    blink: true
+    count: 4
+    position: corners
+}
+
+maze {
+    layout: classic
+    walls: blue
+    color: black
+}
+
+score: 0
+lives: 3
+
+ui {
+    "Score: {score}" at topleft
+    "Lives: {lives}" at topright
+}
+
+victory {
+    "LEVEL COMPLETE!"
+    "Score: {score}"
+    "Press SPACE for next level"
+}
+
+gameover {
+    "GAME OVER!"
+    "Score: {score}"
+    "SPACE=Restart"
+}
+
+start()
+

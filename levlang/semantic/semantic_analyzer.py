@@ -40,6 +40,7 @@ class SemanticAnalyzer:
         self.current_sprite: Optional[str] = None
         self.current_scene: Optional[str] = None
         self.type_cache: Dict[int, str] = {}  # Cache inferred types using id(node)
+        self.game_declared = False  # Track if a game has been declared
     
     def analyze(self) -> bool:
         """Perform semantic analysis on the AST.
@@ -86,6 +87,17 @@ class SemanticAnalyzer:
     
     def visit_game(self, node: GameNode):
         """Visit a game node."""
+        # Only allow one game declaration per program
+        if self.game_declared:
+            self.report_error(
+                ErrorType.DUPLICATE_DECLARATION,
+                f"Only one game can be declared per program. Found additional game '{node.name}'",
+                node.location
+            )
+            return
+        
+        self.game_declared = True
+        
         # Declare the game in the symbol table
         if not self.symbol_table.declare(node.name, SymbolKind.GAME, node.location):
             self.report_error(
