@@ -101,10 +101,25 @@ levlang watch game.lvl
 
 ## Examples
 
-Check out the `useableexamples/` directory for complete game examples:
-- Pong
-- Space Shooter
-- Car Racing
+Check out the `examples/` directory for simple games:
+
+1. **01_hello_world.lvl** - The simplest possible game
+2. **02_moving_square.lvl** - Control a square with arrow keys
+3. **03_two_squares.lvl** - Multiple objects on screen
+4. **04_color_demo.lvl** - Different colored objects
+5. **05_fast_mover.lvl** - Fast-paced movement
+
+Try them:
+```bash
+levlang run examples/01_hello_world.lvl
+```
+
+### Blog Posts
+
+- [Why I Made LevLang](examples/why_i_made_levlang.md) - The story behind the language
+- [Why I Used MIT License](examples/why_i_used_mit_license.md) - Philosophy on open source
+
+For Pygame integration examples, see `useableexamples/pygame_example.lvl`.
 
 ## Requirements
 
@@ -131,7 +146,6 @@ MIT License - see LICENSE file for details
 ## Links
 
 - **GitHub**: https://github.com/sriramramnath/language
-- **Documentation**: See `docs/` directory
 - **Issues**: https://github.com/sriramramnath/language/issues
 
 ## Credits

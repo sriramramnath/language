@@ -1,0 +1,25 @@
+// Two Squares - Two colored squares on screen
+// A simple demo with multiple objects
+
+game "Two Squares"
+
+player {
+    x: 200
+    y: 300
+    color: blue
+    size: 60
+    speed: 3
+    controls: arrows
+}
+
+enemy {
+    x: 600
+    y: 300
+    color: red
+    size: 60
+    speed: 3
+    controls: wasd
+}
+
+start()
+

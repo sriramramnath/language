@@ -280,6 +280,15 @@ class BlockParser:
         if stripped.lower() in {"true", "false"}:
             return stripped.lower() == "true"
 
+        # Handle array literals like ["a", "b", "c"]
+        if stripped.startswith('[') and stripped.endswith(']'):
+            try:
+                # Use ast.literal_eval for safe parsing of lists
+                return ast.literal_eval(stripped)
+            except (ValueError, SyntaxError):
+                # If parsing fails, treat as string
+                pass
+
         if stripped.startswith('"') and stripped.endswith('"'):
             return self._parse_string_literal(stripped)
 

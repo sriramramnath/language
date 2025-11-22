@@ -1,0 +1,56 @@
+// Fast Mover - Navigate through randomly placed obstacles!
+
+game "Fast Mover"
+
+player {
+    x: 400
+    y: 500
+    color: cyan
+    size: 30
+    speed: 8
+    controls: arrows
+    on_collide: game_over
+}
+
+obstacle1 {
+    x: rand(100, 700)
+    y: rand(50, 150)
+    color: red
+    size: 50
+}
+
+obstacle2 {
+    x: rand(100, 700)
+    y: rand(150, 250)
+    color: orange
+    size: 50
+}
+
+obstacle3 {
+    x: rand(100, 700)
+    y: rand(250, 350)
+    color: yellow
+    size: 50
+}
+
+obstacle4 {
+    x: rand(100, 700)
+    y: rand(100, 200)
+    color: magenta
+    size: 40
+}
+
+obstacle5 {
+    x: rand(100, 700)
+    y: rand(200, 300)
+    color: purple
+    size: 40
+}
+
+overlay {
+    shape: overlay
+    _lines: ["GAME OVER!", "Hit an obstacle!", "Press ESC to quit"]
+}
+
+start()
+

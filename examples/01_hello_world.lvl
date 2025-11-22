@@ -1,0 +1,7 @@
+game "Hello World"
+
+ui {
+    "Hello, LevLang!" at center
+}
+
+start()

@@ -15,15 +15,21 @@ def main():
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     
-    # Add version argument
-    version_text = """
-╻  ┏━╸╻ ╻╻  ┏━┓┏┓╻┏━╸
-┃  ┣╸ ┃┏┛┃  ┣━┫┃┗┫┃╺┓
-┗━╸┗━╸┗┛ ┗━╸╹ ╹╹ ╹┗━┛ 
------------------------
-     Levelium Inc.
------------------------
->> CLI version 0.1.0
+    # Add version argument with colors
+    C = '\033[96m'  # Bright Cyan
+    G = '\033[92m'  # Bright Green
+    W = '\033[97m'  # Bright White
+    D = '\033[2m'   # Dim
+    R = '\033[0m'   # Reset
+    
+    version_text = f"""
+{C} ╻  ┏━╸╻ ╻╻  ┏━┓┏┓╻┏━╸{R}
+{C} ┃  ┣╸ ┃┏┛┃  ┣━┫┃┗┫┃╺┓{R}
+{C} ┗━╸┗━╸┗┛ ┗━╸╹ ╹╹ ╹┗━┛{R}
+{D}-----------------------{R}
+{W}    Levelium Inc.{R}
+{D}-----------------------{R}
+{G}>> CLI version 0.3.1{R}
 """
     parser.add_argument(
         '--version',

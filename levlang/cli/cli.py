@@ -84,7 +84,7 @@ class CLI:
     """Command-line interface for the LevLang transpiler."""
     
     # Transpiler version - update when behavior changes to invalidate cache
-    VERSION = "0.3.1"
+    VERSION = "0.3.2"
     
     def __init__(self):
         """Initialize the CLI."""
@@ -112,7 +112,7 @@ class CLI:
         print(f"{c.DIM}-----------------------{c.RESET}")
         print(f"{c.BRIGHT_WHITE}    Levelium Inc.{c.RESET}")
         print(f"{c.DIM}-----------------------{c.RESET}")
-        print(f"{c.BRIGHT_GREEN}>> v{self.VERSION}{c.RESET} {c.DIM}| Block Syntax • Pygame Code Injection{c.RESET}\n")
+        print(f"{c.BRIGHT_GREEN}>> v{self.VERSION}{c.RESET} {c.DIM}| {c.RESET}\n")
     
     def log_success(self, message: str):
         """Print a success message with styling."""

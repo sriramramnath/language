@@ -267,10 +267,9 @@ sudo apt install python3.9  # or higher
    levlang run mygame.lvl
    ```
 
-4. **Check out examples:**
+4. **Try the example:**
    ```bash
-   cd useableexamples/
-   levlang run pong.lvl
+   levlang run useableexamples/pygame_example.lvl
    ```
 
 ---

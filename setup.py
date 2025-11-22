@@ -4,7 +4,7 @@ from setuptools import setup, find_packages
 
 setup(
     name="levlang",
-    version="0.1.0",
+    version="0.3.1",
     author="Sriram Ramnath",
     author_email="sriramramnath2011@gmail.com",
     description="A simplified game development language that transpiles to Python/pygame",
@@ -30,7 +30,6 @@ setup(
     classifiers=[
         "Development Status :: 3 - Alpha",
         "Intended Audience :: Developers",
-        "License :: OSI Approved :: MIT License",
         "Programming Language :: Python :: 3",
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",

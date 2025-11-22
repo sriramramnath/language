@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "levlang"
-version = "0.1.0"
+version = "0.3.1"
 description = "A simplified game development language that transpiles to Python/pygame"
 readme = "README.md"
 requires-python = ">=3.8"
@@ -19,7 +19,6 @@ keywords = ["game", "development", "pygame", "transpiler", "dsl", "language"]
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
@@ -36,7 +35,6 @@ dependencies = [
 
 [project.urls]
 Homepage = "https://github.com/sriramramnath/language"
-Documentation = "https://github.com/sriramramnath/language/tree/main/docs"
 Repository = "https://github.com/sriramramnath/language"
 "Bug Tracker" = "https://github.com/sriramramnath/language/issues"
 

@@ -1,0 +1,15 @@
+// Moving Square - Control a square with arrow keys
+// Use arrow keys to move the blue square around
+
+game "Moving Square"
+
+player {
+    x: 400
+    y: 300
+    color: blue
+    size: 50
+    speed: 5
+    controls: arrows
+}
+
+start()

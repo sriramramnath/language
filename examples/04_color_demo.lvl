@@ -1,0 +1,37 @@
+// Color Demo - Multiple colored objects
+// Demonstrates different colors in LevLang
+
+game "Color Demo"
+
+player {
+    x: 400
+    y: 500
+    color: green
+    size: 40
+    speed: 4
+    controls: arrows
+}
+
+red_box {
+    x: 200
+    y: 200
+    color: red
+    size: 50
+}
+
+purple_box {
+    x: 600
+    y: 200
+    color: purple
+    size: 50
+}
+
+orange_box {
+    x: 400
+    y: 100
+    color: orange
+    size: 50
+}
+
+start()
+

@@ -659,11 +659,42 @@ class BlockEntityInstance:
                 return 0.0
         return 0.0
 
+    def _resolve_coordinate(self, value: Any) -> int:
+        """Parse coordinate value, including rand() expressions."""
+        if isinstance(value, (int, float)):
+            return int(value)
+        if isinstance(value, str):
+            rand_match = re.match(
+                r"rand\(\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*\)", value
+            )
+            if rand_match:
+                low = int(float(rand_match.group(1)))
+                high = int(float(rand_match.group(2)))
+                return random.randint(low, high)
+            try:
+                return int(value)
+            except ValueError:
+                return 0
+        return 0
+    
     def _apply_start_position(self):
         screen_rect = self.runtime.screen_rect
         rect = self.rect
-        rule = self.definition.start_position or "center"
-        parse_position(rule, rect, screen_rect)
+        
+        # Check for explicit x, y coordinates first
+        x = self.definition.props.get("x")
+        y = self.definition.props.get("y")
+        
+        if x is not None or y is not None:
+            # Use explicit coordinates (center the rect at these coords)
+            if x is not None:
+                rect.centerx = self._resolve_coordinate(x)
+            if y is not None:
+                rect.centery = self._resolve_coordinate(y)
+        else:
+            # Fall back to start_position rules
+            rule = self.definition.start_position or "center"
+            parse_position(rule, rect, screen_rect)
 
     def update(self, dt: float, pressed) -> None:
         if not self.active:
@@ -724,27 +755,29 @@ class BlockEntityInstance:
         dx = 0
         dy = 0
         modes = self.control_modes
-        if "wasd" in modes or "horizontal" in modes or "arrows" in modes:
+        
+        # Handle WASD keys (only for wasd mode or horizontal/vertical modifiers)
+        if "wasd" in modes or "horizontal" in modes or "vertical" in modes:
             if pressed[pygame.K_a]:
                 dx -= 1
             if pressed[pygame.K_d]:
                 dx += 1
-        if "arrows" in modes or "horizontal" in modes:
-            if pressed[pygame.K_LEFT]:
-                dx -= 1
-            if pressed[pygame.K_RIGHT]:
-                dx += 1
-
-        if "wasd" in modes or "vertical" in modes or "arrows" in modes:
             if pressed[pygame.K_w]:
                 dy -= 1
             if pressed[pygame.K_s]:
                 dy += 1
-        if "arrows" in modes or "vertical" in modes:
+        
+        # Handle arrow keys (only for arrows mode)
+        if "arrows" in modes:
+            if pressed[pygame.K_LEFT]:
+                dx -= 1
+            if pressed[pygame.K_RIGHT]:
+                dx += 1
             if pressed[pygame.K_UP]:
                 dy -= 1
             if pressed[pygame.K_DOWN]:
                 dy += 1
+        
         return dx, dy
 
     def draw(self, surface: pygame.Surface):
@@ -822,9 +855,13 @@ class BlockStyleGame:
         self._build_definitions()
 
     def _find_viewport(self) -> Dict[str, Any]:
+        # First check for explicit viewport blocks
         for props in self.blocks.values():
             if props.get("shape") == "viewport":
                 return props
+        # Fall back to "game" block if it exists
+        if "game" in self.blocks:
+            return self.blocks["game"]
         return {}
 
     def _find_overlay(self) -> Optional[Dict[str, Any]]:
@@ -846,7 +883,8 @@ class BlockStyleGame:
     def _build_definitions(self):
         for name, props in self.blocks.items():
             shape = props.get("shape")
-            if shape in {"viewport", "overlay"}:
+            # Skip special blocks that aren't entities
+            if shape in {"viewport", "overlay"} or name == "game":
                 continue
             definition = BlockEntityDefinition(name, props)
             self.entity_definitions[name] = definition
@@ -963,7 +1001,7 @@ class BlockStyleGame:
     def _apply_action(
         self, action: str, source: BlockEntityInstance, target: BlockEntityInstance
     ):
-        normalized = (action or "").strip().lower()
+        normalized = (action or "").strip().lower().replace("_", "")
         if not normalized:
             return
         if normalized == "gameover":

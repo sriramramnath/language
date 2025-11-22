@@ -1,13 +1,10 @@
 # Include documentation
 include README.md
 include LICENSE
-include CHANGELOG.md
 
-# Include documentation directory
-recursive-include docs *.md
-
-# Include example files
-recursive-include useableexamples *.lvl *.md
+# Include example files and blog posts
+recursive-include examples *.lvl *.md
+recursive-include useableexamples *.lvl
 
 # Exclude unnecessary files
 global-exclude __pycache__
