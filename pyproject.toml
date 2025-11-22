@@ -8,9 +8,37 @@ version = "0.1.0"
 description = "A simplified game development language that transpiles to Python/pygame"
 readme = "README.md"
 requires-python = ">=3.8"
+license = "MIT"
+authors = [
+    {name = "Sriram Ramnath", email = "sriramramnath2011@gmail.com"}
+]
+maintainers = [
+    {name = "Sriram Ramnath", email = "sriramramnath2011@gmail.com"}
+]
+keywords = ["game", "development", "pygame", "transpiler", "dsl", "language"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Games/Entertainment",
+    "Topic :: Software Development :: Code Generators",
+    "Topic :: Software Development :: Compilers",
+]
 dependencies = [
     "pygame>=2.0.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/sriramramnath/language"
+Documentation = "https://github.com/sriramramnath/language/tree/main/docs"
+Repository = "https://github.com/sriramramnath/language"
+"Bug Tracker" = "https://github.com/sriramramnath/language/issues"
 
 [project.optional-dependencies]
 dev = [

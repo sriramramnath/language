@@ -1,0 +1,53 @@
+// Example: Using pygame[] blocks to write raw pygame code
+// You can mix block syntax with raw pygame code
+
+game "Pygame Mixed Mode"
+
+player {
+    color: blue
+    speed: 5
+}
+
+// Custom pygame initialization block
+init[
+    screen = pygame.display.set_mode((800, 600))
+    pygame.display.set_caption("Mixed Mode Example")
+    clock = pygame.time.Clock()
+]
+
+// Custom game loop with raw pygame code
+game_loop[
+    running = True
+    player_x, player_y = 400, 300
+    
+    while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+        
+        # Movement controls
+        keys = pygame.key.get_pressed()
+        if keys[pygame.K_LEFT]:
+            player_x -= 5
+        if keys[pygame.K_RIGHT]:
+            player_x += 5
+        if keys[pygame.K_UP]:
+            player_y -= 5
+        if keys[pygame.K_DOWN]:
+            player_y += 5
+        
+        # Rendering
+        screen.fill((30, 30, 30))
+        pygame.draw.circle(screen, (0, 255, 255), (int(player_x), int(player_y)), 30)
+        
+        # Draw some text
+        font = pygame.font.Font(None, 36)
+        text = font.render("Use arrow keys to move", True, (255, 255, 255))
+        screen.blit(text, (200, 50))
+        
+        pygame.display.flip()
+        clock.tick(60)
+    
+    pygame.quit()
+]
+

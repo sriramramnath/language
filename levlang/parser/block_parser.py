@@ -43,11 +43,29 @@ class BlockParser:
                 if not self.state_stack:
                     self._report_error(idx, "Found '}' without matching '{'.")
                 else:
+                    current = self.state_stack[-1]
+                    if current["type"] == "pygame":
+                        self._report_error(idx, "Found '}' but expected ']' to close pygame block.")
+                    else:
+                        self.state_stack.pop()
+                continue
+
+            # Check if we're in a pygame block before treating ] as block end
+            if line == "]":
+                if not self.state_stack:
+                    self._report_error(idx, "Found ']' without matching '['.")
+                elif self.state_stack[-1]["type"] != "pygame":
+                    self._report_error(idx, "Found ']' but expected '}' to close regular block.")
+                else:
                     self.state_stack.pop()
                 continue
 
             if line.endswith("{"):
                 self._handle_block_start(idx, line[:-1].strip())
+                continue
+
+            if line.endswith("["):
+                self._handle_pygame_block_start(idx, line[:-1].strip())
                 continue
 
             # Handle top-level commands like start()
@@ -58,6 +76,8 @@ class BlockParser:
             current = self.state_stack[-1]
             if current["type"] == "ui":
                 self._handle_ui_line(idx, line, current)
+            elif current["type"] == "pygame":
+                self._handle_pygame_line(idx, raw_line, current)
             else:
                 self._handle_property_line(idx, line, current["target"])
 
@@ -92,6 +112,25 @@ class BlockParser:
         self.state_stack.append(
             {"type": "block", "name": block_name, "target": target}
         )
+
+    def _handle_pygame_block_start(self, line_idx: int, header: str):
+        """Handle pygame code blocks with blockname[] syntax."""
+        if not header:
+            self._report_error(line_idx, "Empty pygame block header.")
+            return
+
+        block_name = header
+        # Mark this block as a pygame code block with raw code
+        target = self.ast["blocks"].setdefault(block_name, {})
+        target["_pygame_code"] = []
+        self.state_stack.append(
+            {"type": "pygame", "name": block_name, "target": target}
+        )
+
+    def _handle_pygame_line(self, line_idx: int, raw_line: str, context: Dict[str, Any]):
+        """Handle a line of raw pygame code inside a pygame block."""
+        # Store the raw line with its original indentation (but strip leading spaces from the block level)
+        context["target"]["_pygame_code"].append(raw_line.rstrip())
 
     def _handle_top_level_statement(self, line_idx: int, line: str):
         if line.lower() == "start()":

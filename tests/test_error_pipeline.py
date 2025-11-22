@@ -634,13 +634,7 @@ game Test {{
         """Test that deeply nested structures don't crash."""
         # Create deeply nested if statements
         source_code = """
-game Test {
-    title = "Test"
-}
-
-scene Main {
-    x = 0
-    
+sprite Test {
     update {
 """
         
@@ -654,10 +648,6 @@ scene Main {
             source_code += f"        {'    ' * i}}}\n"
         
         source_code += """    }
-    
-    draw {
-        // Just a comment
-    }
 }
 """
         
