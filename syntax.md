@@ -6,13 +6,14 @@ Complete reference for LevLang block syntax, including all features, defaults, a
 
 1. [Basic Structure](#basic-structure)
 2. [Block Properties](#block-properties)
-3. [Collision Detection](#collision-detection)
-4. [Random Values](#random-values)
-5. [Spawning System](#spawning-system)
-6. [Game Over Overlay](#game-over-overlay)
-7. [Default Values](#default-values)
-8. [Automatic Behaviors](#automatic-behaviors)
-9. [Complete Examples](#complete-examples)
+3. [Pygame Code Blocks](#pygame-code-blocks)
+4. [Collision Detection](#collision-detection)
+5. [Random Values](#random-values)
+6. [Spawning System](#spawning-system)
+7. [Game Over Overlay](#game-over-overlay)
+8. [Default Values](#default-values)
+9. [Automatic Behaviors](#automatic-behaviors)
+10. [Complete Examples](#complete-examples)
 
 ---
 
@@ -111,6 +112,157 @@ player {
 ```
 
 Lanes divide the screen into vertical columns. Players can only move between lane centers.
+
+---
+
+## Pygame Code Blocks
+
+LevLang allows you to write **raw Python/Pygame code** directly in your game using square brackets `[]`. This gives you complete control when you need features beyond the declarative syntax.
+
+### Syntax
+
+```levlang
+blockname[
+    # Your Python/Pygame code here
+    # You have access to: screen, clock, entities
+    pygame.draw.circle(screen, (255, 0, 0), (400, 300), 50)
+]
+```
+
+**IMPORTANT:** Pygame code blocks use **square brackets `[ ]`**, not curly braces `{ }`.
+
+### Available Variables
+
+Inside pygame blocks, you have access to:
+- `screen` - The pygame display surface
+- `clock` - The pygame clock object  
+- `entities` - List of all game entities (when in mixed mode)
+- All pygame modules and functions
+
+### Two Modes
+
+#### 1. Mixed Mode (Pygame blocks + Regular blocks)
+
+When you combine pygame blocks with regular LevLang blocks, the pygame code runs **every frame** during rendering:
+
+```levlang
+game "My Game" {
+    width: 800
+    height: 600
+}
+
+player {
+    color: cyan
+    size: 30
+    controls: arrows
+}
+
+// Custom particle effects
+particles[
+    import math
+    for i in range(10):
+        angle = (pygame.time.get_ticks() / 1000 + i * 0.6) % (2 * math.pi)
+        x = int(400 + 200 * math.cos(angle))
+        y = int(300 + 200 * math.sin(angle))
+        pygame.draw.circle(screen, (100, 150, 255), (x, y), 5)
+]
+
+// Display custom stats
+stats[
+    font = pygame.font.Font(None, 24)
+    fps = int(clock.get_fps())
+    text = font.render(f"FPS: {fps}", True, (255, 255, 255))
+    screen.blit(text, (10, 10))
+]
+
+start()
+```
+
+**How it works:** The runtime creates entities from regular blocks, then calls your pygame blocks each frame.
+
+#### 2. Pure Pygame Mode (Only pygame blocks)
+
+When your `.lvl` file contains **only** pygame blocks (no regular blocks), LevLang generates a standalone pygame program:
+
+```levlang
+// Pure pygame mode - no regular blocks
+
+main[
+    # Setup display
+    pygame.display.set_caption("My Custom Game")
+    
+    # Draw
+    pygame.draw.rect(screen, (255, 0, 0), (100, 100, 200, 150))
+    pygame.draw.circle(screen, (0, 255, 0), (400, 300), 75)
+    
+    # Custom text
+    font = pygame.font.Font(None, 48)
+    text = font.render("Pure Pygame!", True, (255, 255, 255))
+    screen.blit(text, (250, 450))
+]
+```
+
+**How it works:** LevLang generates a complete pygame game loop with window creation, event handling, and clock management.
+
+### Common Use Cases
+
+**1. Custom Rendering**
+```levlang
+trail[
+    # Draw a trail behind entities
+    if entities:
+        player = entities[0]
+        pygame.draw.circle(screen, (100, 100, 255), player.rect.center, 15, 2)
+]
+```
+
+**2. Advanced Effects**
+```levlang
+glow[
+    import math
+    time = pygame.time.get_ticks() / 1000
+    intensity = int(128 + 127 * math.sin(time * 2))
+    pygame.draw.circle(screen, (intensity, intensity, 255), (400, 300), 100, 3)
+]
+```
+
+**3. Debug Information**
+```levlang
+debug[
+    font = pygame.font.Font(None, 20)
+    if entities:
+        for i, entity in enumerate(entities):
+            text = font.render(f"{entity.name}: {entity.rect.center}", True, (255, 255, 0))
+            screen.blit(text, (10, 30 + i * 20))
+]
+```
+
+**4. Custom Input Handling**
+```levlang
+input[
+    keys = pygame.key.get_pressed()
+    mouse_pos = pygame.mouse.get_pos()
+    
+    # Draw mouse cursor highlight
+    pygame.draw.circle(screen, (255, 0, 0), mouse_pos, 10, 2)
+]
+```
+
+### Tips & Best Practices
+
+1. **Pygame blocks are called every frame** - avoid heavy computations
+2. **Use meaningful block names** - `particles`, `ui_custom`, `debug`, etc.
+3. **Keep code organized** - one block per logical feature
+4. **Empty blocks are ignored** - no error if block has no code
+5. **Import inside blocks** - imports like `math` should be inside the block
+6. **Mix with declarative syntax** - use regular blocks for simple entities, pygame blocks for complex effects
+
+### Limitations
+
+- Pygame blocks **cannot** modify LevLang entity properties directly
+- Pygame blocks run in render phase, not update phase
+- Variables defined in one block are not accessible in another
+- Pygame blocks do not support LevLang collision detection syntax
 
 ---
 

@@ -1086,8 +1086,35 @@ class BlockStyleGame:
         for entity in self.entities:
             entity.draw(self.screen)
         self._draw_ui()
+        
+        # Call pygame blocks if any are defined
+        self._call_pygame_blocks()
+        
         self._draw_overlay()
         pygame.display.flip()
+    
+    def _call_pygame_blocks(self):
+        """Call any custom pygame code blocks defined in the game."""
+        pygame_blocks = self.data.get("pygame_blocks", [])
+        if not pygame_blocks:
+            return
+        
+        # Get the global namespace where pygame block functions are defined
+        import sys
+        # Try to get the caller's globals (where the pygame blocks are defined)
+        frame = sys._getframe()
+        while frame:
+            if "BLOCK_DATA" in frame.f_globals and any(name in frame.f_globals for name in pygame_blocks):
+                # Found the module with pygame blocks
+                for block_name in pygame_blocks:
+                    if block_name in frame.f_globals:
+                        func = frame.f_globals[block_name]
+                        try:
+                            func(self.screen, self.clock, self.entities)
+                        except Exception as e:
+                            print(f"Error in pygame block '{block_name}': {e}")
+                break
+            frame = frame.f_back
 
 
 def run_block_game(ast: Dict[str, Any]) -> None:

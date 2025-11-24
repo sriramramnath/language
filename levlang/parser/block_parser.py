@@ -107,6 +107,18 @@ class BlockParser:
             )
             return
 
+        # Handle game "Title" { } syntax - extract just "game" as block name
+        game_title_match = re.match(r'^\s*game\s+"([^"]+)"\s*$', header, re.IGNORECASE)
+        if game_title_match:
+            block_name = "game"
+            title = game_title_match.group(1)
+            target = self.ast["blocks"].setdefault(block_name, {})
+            target["title"] = title  # Set title immediately
+            self.state_stack.append(
+                {"type": "block", "name": block_name, "target": target}
+            )
+            return
+
         block_name = header
         target = self.ast["blocks"].setdefault(block_name, {})
         self.state_stack.append(
@@ -140,7 +152,7 @@ class BlockParser:
         # Handle "game <title>" syntax - convert to game block with title property
         game_title_match = re.match(r'^\s*game\s+"([^"]+)"\s*$', line, re.IGNORECASE)
         if game_title_match:
-            # Create an implicit game block with the title
+            # Create an implicit game block with the title (using "game" as key, not full line)
             title = game_title_match.group(1)
             if "game" not in self.ast["blocks"]:
                 self.ast["blocks"]["game"] = {}

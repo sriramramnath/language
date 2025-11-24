@@ -84,7 +84,7 @@ class CLI:
     """Command-line interface for the LevLang transpiler."""
     
     # Transpiler version - update when behavior changes to invalidate cache
-    VERSION = "0.3.2"
+    VERSION = "0.3.3"
     
     def __init__(self):
         """Initialize the CLI."""
