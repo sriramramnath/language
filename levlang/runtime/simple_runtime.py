@@ -14,7 +14,7 @@ import random
 import re
 import sys
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Set
 
 os.environ.setdefault("PYGAME_HIDE_SUPPORT_PROMPT", "1")
 
@@ -537,12 +537,9 @@ def parse_control_modes(value: Optional[str]) -> Set[str]:
         else:
             modes.add(token)
 
-    if "horizontal" in modes:
-        modes.add("wasd")
-        modes.add("arrows")
-    if "vertical" in modes:
-        modes.add("wasd")
-        modes.add("arrows")
+    # Note: Do NOT auto-add "wasd" or "arrows" for horizontal/vertical modes
+    # This would cause horizontal mode to allow vertical movement and vice versa
+    # Users should explicitly set "wasd" or "arrows" if they want full movement
     return modes
 
 
@@ -759,12 +756,19 @@ class BlockEntityInstance:
         dy = 0
         modes = self.control_modes
         
-        # Handle WASD keys (only for wasd mode or horizontal/vertical modifiers)
-        if "wasd" in modes or "horizontal" in modes or "vertical" in modes:
+        # Handle WASD horizontal keys (A/D)
+        # Only for wasd mode (allows all directions) OR horizontal mode (only left/right)
+        # Do NOT allow A/D in vertical mode (vertical should only allow up/down)
+        if "wasd" in modes or ("horizontal" in modes and "vertical" not in modes):
             if pressed[pygame.K_a]:
                 dx -= 1
             if pressed[pygame.K_d]:
                 dx += 1
+        
+        # Handle WASD vertical keys (W/S)
+        # Only for wasd mode (allows all directions) OR vertical mode (only up/down)
+        # Do NOT allow W/S in horizontal mode (horizontal should only allow left/right)
+        if "wasd" in modes or ("vertical" in modes and "horizontal" not in modes):
             if pressed[pygame.K_w]:
                 dy -= 1
             if pressed[pygame.K_s]:
@@ -901,9 +905,7 @@ class BlockStyleGame:
         self.lane_count = self._resolve_lane_count()
         self.last_dt_seconds = 0.0
         
-        # Error tracking for pygame blocks
-        self._pygame_error_logged = False
-        self._error_logged = False
+        # Debug mode for pygame blocks (enables traceback on errors)
         self._debug_mode = self.globals.get("debug", False)
         
         # Build entity definitions with error handling
@@ -1177,16 +1179,13 @@ class BlockStyleGame:
                             func(self.screen, self.clock, self.entities)
                         except pygame.error as e:
                             # Pygame-specific errors (e.g., display surface issues)
-                            if not self._pygame_error_logged:
-                                print(f"Warning: Pygame error in block '{block_name}': {e}", file=sys.stderr)
-                                self._pygame_error_logged = True
+                            # Log each error independently - don't suppress subsequent errors
+                            print(f"Warning: Pygame error in block '{block_name}': {e}", file=sys.stderr)
                         except Exception as e:
-                            # Other errors - log but continue
-                            if not self._error_logged:
-                                print(f"Error in pygame block '{block_name}': {e}", file=sys.stderr)
-                                if self._debug_mode:
-                                    traceback.print_exc()
-                                self._error_logged = True
+                            # Other errors - log each error independently
+                            print(f"Error in pygame block '{block_name}': {e}", file=sys.stderr)
+                            if self._debug_mode:
+                                traceback.print_exc()
                 break
             frame = frame.f_back
 
