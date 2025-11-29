@@ -59,6 +59,9 @@ class BlockParser:
                     self._report_error(idx, "Found ']' without matching '['.")
                 elif self.state_stack[-1]["type"] != "pygame":
                     self._report_error(idx, "Found ']' but expected '}' to close regular block.")
+                    # Pop the block from stack to avoid cascading parsing errors
+                    # The mismatch error is already reported above
+                    self.state_stack.pop()
                 else:
                     self.state_stack.pop()
                 continue

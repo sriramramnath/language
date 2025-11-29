@@ -670,6 +670,10 @@ class BlockEntityInstance:
             if rand_match:
                 low = int(float(rand_match.group(1)))
                 high = int(float(rand_match.group(2)))
+                # Handle reversed arguments gracefully (like _resolve_speed does)
+                # If low > high, swap them to avoid ValueError
+                if low > high:
+                    low, high = high, low
                 return random.randint(low, high)
             try:
                 return int(value)

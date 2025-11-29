@@ -25,7 +25,17 @@ class BlockCodeGenerator:
         
         for name, content in blocks.items():
             if isinstance(content, dict) and "_pygame_code" in content:
+                # Block has pygame code - extract it for function generation
                 pygame_blocks[name] = content["_pygame_code"]
+                # Also preserve regular properties (if any) in regular_blocks
+                # This handles the case where a block is defined both as regular { } and pygame [ ]
+                regular_props = {k: v for k, v in content.items() if k != "_pygame_code"}
+                if regular_props:
+                    # Merge with existing regular block if it exists, or create new
+                    if name in regular_blocks:
+                        regular_blocks[name].update(regular_props)
+                    else:
+                        regular_blocks[name] = regular_props
             else:
                 regular_blocks[name] = content
         
