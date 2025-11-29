@@ -12,12 +12,15 @@ from __future__ import annotations
 import os
 import random
 import re
+import sys
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
 os.environ.setdefault("PYGAME_HIDE_SUPPORT_PROMPT", "1")
 
 import pygame
+
+from levlang.core.exceptions import PygameInitializationError
 
 
 COLOR_MAP = {
@@ -829,15 +832,60 @@ class BlockStyleGame:
     """Runtime for generalized block syntax."""
 
     def __init__(self, ast: Dict[str, Any]):
-        pygame.init()
+        """Initialize the block-style game runtime.
+        
+        Args:
+            ast: The parsed AST dictionary containing game data
+            
+        Raises:
+            PygameInitializationError: If pygame fails to initialize
+            ValueError: If game configuration is invalid
+        """
+        import sys
+        
+        # Initialize pygame with error handling
+        try:
+            pygame_init_result = pygame.init()
+            if pygame_init_result[1] > 0:
+                print(f"Warning: {pygame_init_result[1]} pygame module(s) failed to initialize", file=sys.stderr)
+        except Exception as e:
+            raise PygameInitializationError(
+                f"Failed to initialize pygame: {e}",
+                error_code="R002"
+            ) from e
+        
         self.ast = ast or {}
         self.blocks = self.ast.get("blocks", {})
         self.globals = self.ast.get("globals", {})
         self.ui_rules = [rule for group in self.ast.get("ui", []) for rule in group]
         self.viewport = self._find_viewport()
-        self.width, self.height = parse_size(self.viewport.get("size", "960x540"))
-        self.screen = pygame.display.set_mode((self.width, self.height))
-        pygame.display.set_caption(self.viewport.get("title", "LevLang Game"))
+        
+        # Validate and set screen size
+        try:
+            size_str = self.viewport.get("size", "960x540")
+            self.width, self.height = parse_size(size_str, default=(960, 540))
+            if self.width <= 0 or self.height <= 0:
+                raise ValueError(f"Invalid screen size: {self.width}x{self.height}")
+        except (ValueError, TypeError) as e:
+            print(f"Warning: Invalid size '{size_str}', using default 960x540", file=sys.stderr)
+            self.width, self.height = 960, 540
+        
+        # Create display surface with error handling
+        try:
+            self.screen = pygame.display.set_mode((self.width, self.height))
+        except pygame.error as e:
+            raise PygameInitializationError(
+                f"Failed to create display surface: {e}",
+                error_code="R003"
+            ) from e
+        
+        # Set window title
+        title = self.viewport.get("title") or self.viewport.get("name") or "LevLang Game"
+        try:
+            pygame.display.set_caption(str(title))
+        except Exception:
+            pass  # Non-critical, continue
+        
         self.clock = pygame.time.Clock()
         self.background = parse_color(self.viewport.get("background", "#101820"))
         self.screen_rect = self.screen.get_rect()
@@ -852,7 +900,18 @@ class BlockStyleGame:
         self.font_cache: Dict[int, pygame.font.Font] = {}
         self.lane_count = self._resolve_lane_count()
         self.last_dt_seconds = 0.0
-        self._build_definitions()
+        
+        # Error tracking for pygame blocks
+        self._pygame_error_logged = False
+        self._error_logged = False
+        self._debug_mode = self.globals.get("debug", False)
+        
+        # Build entity definitions with error handling
+        try:
+            self._build_definitions()
+        except Exception as e:
+            print(f"Warning: Error building entity definitions: {e}", file=sys.stderr)
+            # Continue with empty definitions rather than crashing
 
     def _find_viewport(self) -> Dict[str, Any]:
         # First check for explicit viewport blocks
@@ -1094,13 +1153,18 @@ class BlockStyleGame:
         pygame.display.flip()
     
     def _call_pygame_blocks(self):
-        """Call any custom pygame code blocks defined in the game."""
+        """Call any custom pygame code blocks defined in the game.
+        
+        Handles errors gracefully to prevent one bad block from crashing the game.
+        """
         pygame_blocks = self.data.get("pygame_blocks", [])
         if not pygame_blocks:
             return
         
         # Get the global namespace where pygame block functions are defined
         import sys
+        import traceback
+        
         # Try to get the caller's globals (where the pygame blocks are defined)
         frame = sys._getframe()
         while frame:
@@ -1111,12 +1175,65 @@ class BlockStyleGame:
                         func = frame.f_globals[block_name]
                         try:
                             func(self.screen, self.clock, self.entities)
+                        except pygame.error as e:
+                            # Pygame-specific errors (e.g., display surface issues)
+                            if not self._pygame_error_logged:
+                                print(f"Warning: Pygame error in block '{block_name}': {e}", file=sys.stderr)
+                                self._pygame_error_logged = True
                         except Exception as e:
-                            print(f"Error in pygame block '{block_name}': {e}")
+                            # Other errors - log but continue
+                            if not self._error_logged:
+                                print(f"Error in pygame block '{block_name}': {e}", file=sys.stderr)
+                                if self._debug_mode:
+                                    traceback.print_exc()
+                                self._error_logged = True
                 break
             frame = frame.f_back
 
 
 def run_block_game(ast: Dict[str, Any]) -> None:
-    """Entry point for the generalized block syntax runtime."""
-    BlockStyleGame(ast).run()
+    """Entry point for the generalized block syntax runtime.
+    
+    Args:
+        ast: The parsed AST dictionary containing game data
+        
+    Raises:
+        PygameInitializationError: If pygame fails to initialize
+        RuntimeError: If game data is invalid or corrupted
+    """
+    import sys
+    
+    try:
+        # Initialize pygame with error handling
+        pygame_init_success = pygame.init()
+        if pygame_init_success[1] > 0:  # Number of failed modules
+            print(f"Warning: {pygame_init_success[1]} pygame module(s) failed to initialize", file=sys.stderr)
+        
+        # Validate AST structure
+        if not isinstance(ast, dict):
+            raise RuntimeError("Invalid AST: expected dictionary")
+        
+        if "blocks" not in ast:
+            raise RuntimeError("Invalid AST: missing 'blocks' key")
+        
+        # Create and run game
+        game = BlockStyleGame(ast)
+        game.run()
+        
+    except pygame.error as e:
+        raise PygameInitializationError(
+            f"Failed to initialize pygame: {e}",
+            error_code="R001"
+        ) from e
+    except KeyboardInterrupt:
+        # User pressed Ctrl+C - graceful shutdown
+        print("\nGame interrupted by user", file=sys.stderr)
+        pygame.quit()
+        sys.exit(0)
+    except Exception as e:
+        # Unexpected error - log and re-raise
+        print(f"Unexpected error: {e}", file=sys.stderr)
+        import traceback
+        traceback.print_exc()
+        pygame.quit()
+        raise

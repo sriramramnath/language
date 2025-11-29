@@ -19,6 +19,7 @@ from levlang.lexer import Lexer
 from levlang.parser import Parser
 from levlang.semantic import SemanticAnalyzer
 from levlang.codegen import CodeGenerator
+from levlang.core.validators import ValidationError
 
 # Import reserved keywords for parser detection
 RESERVED_KEYWORDS = set(Lexer.KEYWORDS.keys()) | {'component', 'entities'}
@@ -143,18 +144,53 @@ class CLI:
             print(f"⚠ {message}")
     
     def transpile_file(self, input_path: str, output_path: Optional[str] = None, show_banner: bool = True) -> int:
-        """Transpile a LevLang file to Python."""
+        """Transpile a LevLang file to Python.
+        
+        Args:
+            input_path: Path to the input .lvl file
+            output_path: Optional path for output .py file (defaults to input with .py extension)
+            show_banner: Whether to display the CLI banner
+            
+        Returns:
+            0 on success, 1 on error
+        """
         if show_banner:
             self.print_banner()
         
+        # Validate input path
+        try:
+            from levlang.core.validators import validate_file_path
+            input_path_obj = validate_file_path(input_path, must_exist=True)
+        except ValidationError as e:
+            self.log_error(str(e))
+            return 1
+        except Exception as e:
+            self.log_error(f"Invalid input path: {e}")
+            return 1
+        
         if output_path is None:
             output_path = str(Path(input_path).with_suffix('.py'))
+        
+        # Validate output path
+        try:
+            output_path_obj = Path(output_path).resolve()
+            # Ensure parent directory exists
+            output_path_obj.parent.mkdir(parents=True, exist_ok=True)
+        except (OSError, ValueError) as e:
+            self.log_error(f"Invalid output path: {e}")
+            return 1
         
         try:
             with open(input_path, 'r', encoding='utf-8') as f:
                 source_code = f.read()
         except FileNotFoundError:
             self.log_error(f"File not found: {input_path}")
+            return 1
+        except PermissionError:
+            self.log_error(f"Permission denied: {input_path}")
+            return 1
+        except UnicodeDecodeError as e:
+            self.log_error(f"File encoding error: {e}. File must be UTF-8 encoded.")
             return 1
         
         success, generated_code, errors = self._generate_code(

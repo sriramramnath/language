@@ -11,7 +11,17 @@ def main():
     """Main entry point for the levlang CLI."""
     parser = argparse.ArgumentParser(
         prog='levlang',
-        description='LevLang Transpiler - Transpile LevLang to Python/pygame',
+        description='LevLang Transpiler - A simple, declarative language for creating pygame games',
+        epilog='''
+Examples:
+  levlang transpile game.lvl              # Transpile to game.py
+  levlang transpile game.lvl -o output.py # Specify output file
+  levlang run game.lvl                     # Transpile and run
+  levlang watch game.lvl                   # Watch for changes and retranspile
+
+Documentation: https://github.com/yourusername/levlang
+Error Codes: See docs/ERROR_CODES.md
+        ''',
         formatter_class=argparse.RawDescriptionHelpFormatter
     )
     
@@ -29,7 +39,7 @@ def main():
 {D}-----------------------{R}
 {W}    Levelium Inc.{R}
 {D}-----------------------{R}
-{G}>> CLI version 0.3.1{R}
+{G}>> CLI version 0.3.3{R}
 """
     parser.add_argument(
         '--version',
@@ -43,7 +53,8 @@ def main():
     # Transpile command
     transpile_parser = subparsers.add_parser(
         'transpile',
-        help='Transpile a LevLang file to Python'
+        help='Transpile a LevLang file to Python',
+        description='Convert a .lvl file to executable Python code'
     )
     transpile_parser.add_argument(
         'input',
@@ -59,7 +70,8 @@ def main():
     # Watch command
     watch_parser = subparsers.add_parser(
         'watch',
-        help='Watch a LevLang file and automatically retranspile on changes'
+        help='Watch a LevLang file and automatically retranspile on changes',
+        description='Monitor a .lvl file and automatically retranspile when it changes. Press Ctrl+C to stop.'
     )
     watch_parser.add_argument(
         'input',
@@ -75,7 +87,8 @@ def main():
     # Run command
     run_parser = subparsers.add_parser(
         'run',
-        help='Transpile and execute a LevLang file'
+        help='Transpile and execute a LevLang file',
+        description='Transpile a .lvl file and immediately run the generated Python code. Supports level chaining via __NEXT_LEVEL__ markers.'
     )
     run_parser.add_argument(
         'input',
