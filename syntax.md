@@ -765,7 +765,7 @@ start()
 
 ## Version
 
-This documentation is for **LevLang v0.3.2**
+This documentation is for **LevLang v0.3.3**
 
 Last updated: 2025-11-22
 

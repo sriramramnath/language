@@ -47,8 +47,9 @@ Thumbs.db
 *.pyc
 *.pyo
 
-# LevLang generated files
-*.py
+# LevLang generated game files (transpiled from .lvl files)
+# Only ignore .py files in root and examples directories, not source code
+/*.py
+examples/*.py
+useableexamples/*.py
 !setup.py
-!tests/*.py
-!levlang/**/*.py

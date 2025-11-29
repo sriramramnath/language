@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "levlang"
-version = "0.3.1"
+version = "0.3.3"
 description = "A simplified game development language that transpiles to Python/pygame"
 readme = "README.md"
 requires-python = ">=3.8"

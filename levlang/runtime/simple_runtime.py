@@ -1157,7 +1157,7 @@ class BlockStyleGame:
         
         Handles errors gracefully to prevent one bad block from crashing the game.
         """
-        pygame_blocks = self.data.get("pygame_blocks", [])
+        pygame_blocks = self.ast.get("pygame_blocks", [])
         if not pygame_blocks:
             return
         
