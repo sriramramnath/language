@@ -46,6 +46,9 @@ class BlockParser:
                     current = self.state_stack[-1]
                     if current["type"] == "pygame":
                         self._report_error(idx, "Found '}' but expected ']' to close pygame block.")
+                        # Pop the block from stack to avoid cascading "unclosed blocks" errors
+                        # The mismatch error is already reported above
+                        self.state_stack.pop()
                     else:
                         self.state_stack.pop()
                 continue
@@ -330,7 +333,7 @@ class BlockParser:
             raise SyntaxError(f"Malformed string literal: {token}") from e
 
     def _strip_comment(self, line: str) -> str:
-        """Strip // comments while preserving them inside quoted strings."""
+        """Strip // and # comments while preserving them inside quoted strings."""
         in_quotes = False
         quote_char = None
         i = 0
@@ -362,9 +365,14 @@ class BlockParser:
                 i += 1
                 continue
             
-            # Check for comment start
-            if not in_quotes and ch == '/' and i + 1 < len(line) and line[i + 1] == '/':
-                return line[:i]
+            # Check for comment start (both // and #)
+            if not in_quotes:
+                # Check for // comment
+                if ch == '/' and i + 1 < len(line) and line[i + 1] == '/':
+                    return line[:i]
+                # Check for # comment
+                if ch == '#':
+                    return line[:i]
             
             i += 1
         
