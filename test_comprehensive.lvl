@@ -1,0 +1,65 @@
+// Comprehensive test of all language features
+
+game "Feature Test" {
+    width: 1000
+    height: 700
+    background: #1a1a2e
+}
+
+// Test regular blocks
+player {
+    color: cyan
+    size: 40
+    x: 100
+    y: 350
+    controls: arrows
+    speed: 6
+}
+
+enemy {
+    color: red
+    size: 35
+    x: rand(200, 900)
+    y: rand(100, 600)
+    speed: 2
+    on_collide: game_over
+}
+
+coin {
+    color: yellow
+    size: 20
+    x: rand(200, 900)
+    y: rand(100, 600)
+}
+
+// Test pygame block - custom rendering
+particles[
+    # Draw some particles
+    import math
+    for i in range(10):
+        angle = (pygame.time.get_ticks() / 1000 + i * 0.6) % (2 * math.pi)
+        x = int(500 + 200 * math.cos(angle))
+        y = int(350 + 200 * math.sin(angle))
+        size = int(5 + 3 * math.sin(pygame.time.get_ticks() / 200 + i))
+        pygame.draw.circle(screen, (100, 150, 255), (x, y), size)
+]
+
+stats[
+    # Custom stats display
+    font = pygame.font.Font(None, 24)
+    fps = int(clock.get_fps())
+    text = font.render(f"FPS: {fps}", True, (100, 255, 100))
+    screen.blit(text, (10, 50))
+]
+
+ui {
+    "Feature Test Game" at top_center
+}
+
+overlay {
+    "GAME OVER"
+    "Final Score: {score}"
+    "Press ESC to quit"
+}
+
+
