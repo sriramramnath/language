@@ -687,10 +687,18 @@ class BlockEntityInstance:
         
         if x is not None or y is not None:
             # Use explicit coordinates (center the rect at these coords)
+            # If only one coordinate is provided, center the other on screen
             if x is not None:
                 rect.centerx = self._resolve_coordinate(x)
+            else:
+                # No x provided - center horizontally on screen
+                rect.centerx = screen_rect.centerx
+            
             if y is not None:
                 rect.centery = self._resolve_coordinate(y)
+            else:
+                # No y provided - center vertically on screen
+                rect.centery = screen_rect.centery
         else:
             # Fall back to start_position rules
             rule = self.definition.start_position or "center"
